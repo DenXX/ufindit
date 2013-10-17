@@ -26,20 +26,15 @@ if (_init == undefined) {
     var _saveLocalLog = 0;
     var _sendRequests = 1;
     var _trackCached = 0;
+
     /** BEGIN: TO BE CHANGED **/
     var _getReqUrl = "{{ event_logging_url }}?";
-    //var _postReqUrl = "http://ir-ub.mathcs.emory.edu:8100/cgi/savePage.cgi";
     var _postReqUrl = "{{ save_page_url }}";
-    //MA
     var _proxy_prefix_abs = "{{ proxy_url }}";
-    var _replace_links_to_proxy = window.location.href.indexOf(_proxy_prefix_abs) == 0;
-    /*
-    var _getReqUrl = "http://ir-ub.mathcs.emory.edu:8100/http/ir-ub.mathcs.emory.edu:8100/?";
-    var _postReqUrl = "http://ir-ub.mathcs.emory.edu:8100/http/ir-ub.mathcs.emory.edu:8100/cgi/savePage.cgi";
-    */
+    var _replace_links_to_proxy = false; // window.location.href.indexOf(_proxy_prefix_abs) == 0;
     var _localDir = "c:\\emu_log\\";
-
     /** END: TO BE CHANGED **/
+
     var _header = _getReqUrl +"v=EMU.0.9&wid=";
     var _currHeaderUrl = "";
     var _currUrl = "";

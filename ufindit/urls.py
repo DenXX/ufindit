@@ -31,10 +31,11 @@ urlpatterns = patterns('',
         {'template_name': 'reset_complete.html'}, name='password_reset_complete'),
 
     # Proxy
-    url(r'^http/(?P<url>.*)$', HttpProxy.as_view(view_name='http_proxy',
-        mode='record', user_agent='Mozilla/5.0'), name='http_proxy'),
+    url(r'^(?P<task_id>[0-9]*)/http/(?P<url>.*)$', HttpProxy.as_view(
+        view_name='http_proxy', mode='playrecord', user_agent='Mozilla/5.0'),
+        name='http_proxy'),
     # Serp links
-    url(r'^(?P<task_id>[0-9]*)/http/(?P<url>.*)$', 'ufindit.views.http_proxy_decorator',
+    url(r'^http/(?P<task_id>[0-9]*)/(?P<url>.*)$', 'ufindit.views.http_proxy_decorator',
         name='http_proxy_decorator'),
 
     # EMU and event logging

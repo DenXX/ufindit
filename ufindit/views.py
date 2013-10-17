@@ -104,7 +104,7 @@ def game(request, game_id):
         current_task.finish = datetime.now()
         current_task.save()
         # Redirect back so that refresh doesn't cause form resend.
-        return HttpResponseRedirect(reverse('game', kwargs={'game_id': game_id}))
+        return HttpResponseRedirect(reverse('game', kwargs={'game_id':game_id}))
 
     context = { "game" : game, "player_task": current_task }
     return render(request, 'game.html', context)
@@ -113,4 +113,5 @@ def game(request, game_id):
 def http_proxy_decorator(request, task_id, url):
     player_task = get_object_or_404(PlayerTask, id=task_id)
     EventLogger.click(player_task, url)
-    return HttpResponseRedirect(reverse('http_proxy', kwargs={'url': url}))
+    return HttpResponseRedirect(reverse('http_proxy', kwargs={'url':url,
+        'task_id':task_id}))

@@ -12,14 +12,13 @@ import settings
 
 def emu_js(request, task_id):
     player_task = get_object_or_404(PlayerTask, id=task_id)
-    print request.build_absolute_uri(reverse('http_proxy', kwargs={'url':''}))
     context = {
         "event_logging_url": request.build_absolute_uri(reverse('emu_log_event', 
             kwargs={'task_id':task_id})),
         "save_page_url": request.build_absolute_uri(reverse('emu_save_page',
             kwargs={'task_id':task_id})),
         "proxy_url": request.build_absolute_uri(reverse('http_proxy',
-            kwargs={'url':''})),
+            kwargs={'url':'','task_id':task_id})),
          }
     return render(request, 'emu_template.js', context,
         content_type="application/javascript")

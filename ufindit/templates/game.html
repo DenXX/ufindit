@@ -40,7 +40,7 @@
                     {{ player_task.task.text }}
                 </div>
             </div>
-            <input type="text" class="form-control" name="answer" placeholder="Answer"><br />
+            <input type="text" class="form-control" id="answer" name="answer" placeholder="Answer" autocomplete="off"><br />
             <input type="hidden" class="form-control" name="answer_url" placeholder="URL of a web page with answer">
         </div>
         <div class="modal-footer">
@@ -51,7 +51,6 @@
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
 </form>
-
 <iframe src="{% url 'search' task_id=player_task.id %}" height="100%" width="100%" frameBorder="0" class="searchiframe"></iframe>
 {% endblock %}
 
