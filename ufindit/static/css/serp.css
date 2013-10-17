@@ -1,0 +1,22 @@
+ol.search-results h3 {
+    font-size: 14px;
+    padding: 0px;
+    margin: 0px;
+}
+
+ol.search-results li {
+    padding-bottom: 10px;
+}
+
+.nospace {
+    padding: 0px;
+    margin: 0px;
+}
+
+.search-results {
+    font-size: 12px;
+}
+
+.search-results-link {
+    color: green;
+}

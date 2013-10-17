@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block  title %}
+    uFindIt - {{ player_task.task.text }}
+{% endblock %}
+
+{% block navbar_content %}
+<!-- <form class="navbar-form navbar-center"> -->
+<ul class="nav navbar-nav">
+    <li>
+        <a id="question" data-toggle="popover" href="#" class="navbar-text panel panel-success panel-body panel-sm" data-placement="bottom" style="margin-top:5px; margin-right:5px; padding:10px 10px 10px 10px" data-content="{{ player_task.task.text }}">
+            {{ player_task.task.text|truncatechars:70 }}
+        </a>
+    </li>
+</ul>
+
+<form class="navbar-form navbar-left" role="search" method="POST">
+  {% csrf_token %}
+  <button type="button" data-toggle="modal" data-target="#answerModal" class="btn btn-primary">Answer question</button>
+  <button type="submit" name="skip" class="btn btn-default">Skip</button>
+</form>
+<!-- </form> -->
+{% endblock %}
+
+{% block content %}
+
+<form method="POST">
+  {% csrf_token %}
+  <div class="modal fade" id="answerModal" tabindex="-1" role="dialog" aria-labelledby="Answer" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Answer question</h4>
+        </div>
+        <div class="modal-body">
+            <div class="panel panel-success">
+                <div class="panel-heading">Question:</div>
+                <div class="panel-body">
+                    {{ player_task.task.text }}
+                </div>
+            </div>
+            <input type="text" class="form-control" name="answer" placeholder="Answer"><br />
+            <input type="hidden" class="form-control" name="answer_url" placeholder="URL of a web page with answer">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="submit" name="save_answer" class="btn btn-primary">Save answer</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</form>
+
+<iframe src="{% url 'search' task_id=player_task.id %}" height="100%" width="100%" frameBorder="0" class="searchiframe"></iframe>
+{% endblock %}
+
+{% block docend %}
+<script type="text/javascript" language="javascript"> 
+$('.searchiframe').css('height', $(window).height() - 60 + 'px');
+$("#question").popover({
+    animation:true,
+    html:true,
+    title:'<span class="text-info"><strong>Question:</strong></span>'+
+             '<button type="button" id="close" class="close" onclick="$(&quot;#question&quot;).popover(&quot;hide&quot;);">&times;</button>'
+  });
+$("#question").popover('show');
+</script>
+{% endblock %}

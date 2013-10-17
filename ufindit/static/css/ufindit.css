@@ -1,0 +1,9 @@
+body {
+  min-height: 100%;
+  padding-top: 50px;
+}
+
+.navbar .nav
+{
+    height: 50px;
+}

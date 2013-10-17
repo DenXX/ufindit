@@ -1,0 +1,48 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="uFindIt game">
+    <meta name="author" content="Intelligent Information Access Lab, Emory University">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/serp.css" rel="stylesheet">
+    <title>{% block title %} uFintIt {% endblock %}</title>
+    <style>
+    body {
+      padding-top: 100px;
+    }
+    </style>
+  </head>
+
+  <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <!--<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>-->
+          <a class="navbar-brand">Query:</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          {% block  searchform %}
+          {% endblock %}
+        </div><!--/.navbar-collapse -->
+      </div>
+    </div>
+
+    {% block serp %}
+    {% endblock %}
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    {% block endofdoc %}
+    {% endblock %}
+  </body>
+</html>

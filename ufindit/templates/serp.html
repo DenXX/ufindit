@@ -1,0 +1,82 @@
+{% extends "search_base.html" %}
+
+{% block title %}
+uFindIt
+{% if query %}- Search result for {{query}}{% endif %}
+{% endblock %}
+
+{% block searchform %}
+    <form class="navbar-form" method="GET">
+      {% csrf_token %}
+      <div class="input-append">
+        <input type="text" value="{{ query }}" id="appendedInputButton" name="q" size="60" autocomplete="off">
+        <button type="submit" class="btn btn-success" id="search" data-loading-text="Searching...">Search</button>
+      </div>
+    </form>
+{% endblock %}
+
+{% block serp %}
+
+<div class="container">
+    <div class="row">
+        {% if query %}
+        <div class="col-md-6 panel panel-default panel-body">
+            {% if not results %}
+                No results found for <strong>{{ query }}</strong>.
+            {% else %}
+                <ol class="search-results" start="{{ results.start_index }}">
+                {% for result in results %}
+                <li>
+                    <div class="nospace"><h3 class="nospace"><a href="{% url 'http_proxy_decorator' task_id=task_id url=result.url %}" class="nospace">{{ result.title|safe }}</a></h3></div>
+                    <div class="nospace"><cite class="search-results-link">{{ result.display_url|safe }}</cite></div>
+                    <p>{{ result.snippet|safe }}</p>
+                </li>
+                {% endfor %}
+                </ol>
+
+                {# Pagination : BEGIN #}
+                <ul class="pagination pagination-sm">
+                    <li {% if not results.has_previous %}class="disabled"{% endif %}>
+                        <a href="{% if results.has_previous %}?q={{query}}&page={{ results.previous_page_number }}{% else %}#{% endif %}">&laquo;</a>
+                    </li>
+                    
+                    {# Display ... if we don't see last page #}
+                    {% if page_numbers|first != 1 %}
+                    <li class="disabled"><a>...</a></li>
+                    {% endif %}
+
+                    {% for page in page_numbers %}
+                    <li {% ifequal page results.number %}class="active"{% endifequal %}>
+                        <a href="?q={{query}}&page={{ page }}">{{ page }}</a>
+                    </li>
+                    {% endfor %}
+
+                    {# Display ... if we don't see last page #}
+                    {% if page_numbers|last != results.paginator.num_pages %}
+                    <li class="disabled"><a>...</a></li>
+                    {% endif %}
+
+                    <li {% if not results.has_next %}class="disabled"{% endif %}>
+                        <a href="{% if results.has_next %}?q={{query}}&page={{ results.next_page_number }}{% else %}#{% endif %}">&raquo;</a>
+                    </li>
+                </ul>
+                {# Pagination : END #}
+
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block endofdoc %}
+<script language="javascript">
+    $('#search').button();
+    $('#search').bind('click', function() {
+        $(this).button('loading');
+    });
+</script>
+{% if enable_emu %}
+    <script type="text/javascript" src="{% url 'emu_js' task_id=task_id %}"></script>
+{% endif %}
+{% endblock %}

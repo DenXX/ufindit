@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h2>Password reset complete</h2>
+    </div>
+
+    <div class="alert alert-success">
+      Your password has been set. You may go ahead and <a class="alert-link" href="{% url 'login' %}">sign in</a> now.
+    </div>
+
+</div>
+{% endblock %}
