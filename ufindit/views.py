@@ -49,11 +49,12 @@ def search(request, task_id, template='serp.html'):
     player_task = get_object_or_404(PlayerTask, id=task_id)
     if "q" in request.GET:
         query = unquote(request.GET["q"]).decode('utf8')
-        EventLogger.query(player_task, query)
         search_proxy = SearchProxy(settings.SEARCH_PROXY)
         context["query"] = query
         search_results = search_proxy.search(query)
         context["serpid"] = search_results.id
+        # Log query event
+        EventLogger.query(player_task, query, search_results.id)
         paginator = Paginator(search_results, settings.RESULTS_PER_PAGE)
         page = request.GET.get('page')
         try:

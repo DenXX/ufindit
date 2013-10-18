@@ -1,4 +1,4 @@
-from ufindit.models import Event, PlayerTask
+from ufindit.models import Event, PlayerTask, Serp
 
 class EventLogger:
     '''
@@ -10,9 +10,10 @@ class EventLogger:
         self.task = task
 
     @staticmethod
-    def query(player_task, query):
+    def query(player_task, query, serpid):
         assert isinstance(player_task, PlayerTask)
-        Event(player_task=player_task, event='Q', query=query).save()
+        Event(player_task=player_task, event='Q', query=query,
+            serp=Serp.objects.get(id=serpid)).save()
 
     @staticmethod
     def click(player_task, url):

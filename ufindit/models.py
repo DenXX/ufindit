@@ -96,6 +96,7 @@ class Event(models.Model):
         'happened')
     query = models.CharField(max_length=1024, blank=True, null=True,
         help_text=u'Query text if the event is query')
+    serp = models.ForeignKey(Serp, blank=True, null=True, help_text=u'SERP')
     url = models.URLField(blank=True, null=True, help_text=u'Clicked url')
     extra_data = models.TextField(blank=True, null=True,
         help_text=u'Extra information about the event')
