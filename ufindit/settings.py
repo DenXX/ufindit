@@ -196,6 +196,9 @@ EMAIL_USE_TLS = True
 SEARCH_PROXY = "bing"
 RESULTS_PER_PAGE = 10
 
+# Which SERP template to use, we can add extra html code by switching templates.
+SERP_TEMPLATE_NAME = 'query_difficulty_serp.html'
+
 # dsavenk@emory.edu
 BING_API_KEY = 'ua4NbbaJUUabS47ZzGM2VANoW3s+EdogrHxbtRRsg1Y'
 

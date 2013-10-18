@@ -10,7 +10,8 @@ urlpatterns = patterns('',
     url(r'^$', 'ufindit.views.index', name='index'),
     url(r'^game/(?P<game_id>[0-9]+)/$', 'ufindit.views.game', name='game'),
 
-    url(r'^(?P<task_id>[0-9]+)/s$', 'ufindit.views.search', name='search'),
+    url(r'^(?P<task_id>[0-9]+)/s$', 'ufindit.views.search', 
+        {'template':settings.SERP_TEMPLATE_NAME}, name='search'),
 
     # Login/Logout/Registration URL
     url(r'^login$', 'django.contrib.auth.views.login',
@@ -45,6 +46,11 @@ urlpatterns = patterns('',
         name='emu_log_event'),
     url(r'^(?P<task_id>[0-9]*)/emu/save_page$', 'ufindit.emu_views.save_page',
         name='emu_save_page'),
+
+    # Query difficulty URL
+    url(r'^(?P<task_id>[0-9]*)/qdiff$', 
+        'ufindit.query_difficulty_views.submit_query_difficulty',
+        name='submit_query_difficulty'),
 
     # Admin views
     url(r'^admin/', include(admin.site.urls)),

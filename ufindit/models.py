@@ -1,3 +1,4 @@
+import base64
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -105,3 +106,35 @@ class Event(models.Model):
 
     class Meta:
         ordering = ['player_task', 'time']
+
+
+class Serp(models.Model):
+    query = models.CharField(max_length=1024, db_index=True,
+        help_text=u'Text of the query')
+    engine = models.CharField(max_length=10, db_index=True,
+        help_text=u'Code of search engine used')
+    _results = models.TextField(db_column='results', help_text=u'Base64 encoded '
+        'pickled Results list')
+
+    def set_results(self, results):
+        self._results = base64.encodestring(results)
+
+    def get_results(self):
+        return base64.decodestring(self._results)
+
+    results = property(get_results, set_results)
+
+    def __unicode__(self):
+        return self.query
+
+    class Meta:
+        unique_together = ("query", "engine")
+
+
+class QueryDifficulty(models.Model):
+    player_task = models.ForeignKey(PlayerTask)
+    serp = models.ForeignKey(Serp, help_text=u'Search engine results')
+    difficulty = models.CharField(max_length=512, help_text=u'Type of difficulty')
+
+    def __unicode__(self):
+        return self.player_task.player_game.player.user.username + " - " + self.serp.query

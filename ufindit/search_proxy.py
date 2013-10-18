@@ -20,6 +20,8 @@ import re
 import urllib
 import urllib2
 
+from ufindit.models import Serp
+
 # Python 2.6 has json built in, 2.5 needs simplejson
 try:
     import json
@@ -62,6 +64,7 @@ class ResultsSet:
     Represents a collection of results returned by a search engine.
     """
     def __init__(self, query, results):
+        self.id = None
         self.query = query
         self.results = results
 
@@ -158,30 +161,28 @@ class CacheSearchProvider(SearchProvider):
     """
     Provides caching capabilities for search results.
     """
-    _separator = u'\u3000'
-    _timeout = None
     def __init__(self, search_provider):
         assert isinstance(search_provider, SearchProvider)
         self._search_provider = search_provider
-        self._cache = get_cache('search')
 
     def search(self, query, verbose=False):
         """
         Checks cache for search results and calls underlining provider if fails.
         """
-        key = unicode(self._search_provider) + CacheSearchProvider._separator +\
-            query
-        results = self._cache.get(key)
-        if not results:
+        results = Serp.objects.filter(query=query, engine=self._search_provider)
+        if len(results) == 0:
             if verbose:
                 print "Search cache miss"
             results = self._search_provider.search(query)
-            self._cache.set(key, pickle.dumps(results),
-                CacheSearchProvider._timeout)
+            serp = Serp(query=query, engine=self._search_provider,
+                results=pickle.dumps(results)).save()
+            results.id = serp.id
         else:
             if verbose:
                 print "Search cache hit"
-            results = pickle.loads(results)
+            serpid = results[0].id
+            results = pickle.loads(results[0].results)
+            results.id = serpid
         return results
 
     def __unicode__(self):

@@ -42,7 +42,7 @@ def register(request):
 
 
 @login_required
-def search(request, task_id):
+def search(request, task_id, template='serp.html'):
     context = {"task_id":task_id}
     user = request.user
     player = Player.objects.get(user=request.user)
@@ -52,8 +52,9 @@ def search(request, task_id):
         EventLogger.query(player_task, query)
         search_proxy = SearchProxy(settings.SEARCH_PROXY)
         context["query"] = query
-        paginator = Paginator(search_proxy.search(query),
-            settings.RESULTS_PER_PAGE)
+        search_results = search_proxy.search(query)
+        context["serpid"] = search_results.id
+        paginator = Paginator(search_results, settings.RESULTS_PER_PAGE)
         page = request.GET.get('page')
         try:
             context["results"] = paginator.page(page)
@@ -67,8 +68,8 @@ def search(request, task_id):
         start_page = max([1, page - 3])
         end_page = min([paginator.num_pages + 1, page + 4])
         context["page_numbers"] = range(start_page, end_page)
-        context["enable_emu"] = settings.ENABLE_EMU_LOGGING
-    return render(request, 'serp.html', context)
+    context["enable_emu"] = settings.ENABLE_EMU_LOGGING
+    return render(request, template, context)
 
 
 @login_required
