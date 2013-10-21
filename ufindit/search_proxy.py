@@ -175,7 +175,8 @@ class CacheSearchProvider(SearchProvider):
                 print "Search cache miss"
             results = self._search_provider.search(query)
             serp = Serp(query=query, engine=self._search_provider,
-                results=pickle.dumps(results)).save()
+                results=pickle.dumps(results))
+            serp.save()
             results.id = serp.id
         else:
             if verbose:

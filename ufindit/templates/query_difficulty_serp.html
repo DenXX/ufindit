@@ -23,6 +23,7 @@
         <div class="modal-body">
           <form class="form-horizontal" id="queryDifficultyForm">
             <input type="hidden" name="serpid" value="{{ serpid }}">
+            <input type="hidden" id="openTimer" name="openTimer" value="0">
             <fieldset>
             <!-- Multiple Checkboxes -->
             <div class="control-group">
@@ -55,22 +56,42 @@
   </div><!-- /.modal -->
   <script language="javascript">
     {% if query %}
-    $('#search').hide();
-    $('#queryText').prop('disabled', true);
-    $('#queryDifficultySubmit').on('click', function () {
-        var empty = $('#queryDifficultyTextarea').val() == "";
-        empty = empty && $(':checkbox:checked').length == 0;
-        if (empty) {
-            alert("Please choose one or more options before continuing.");
-        }
-        else {
-            $.post("{% url 'submit_query_difficulty' task_id=task_id %}", 
-                $('#queryDifficultyForm').serialize());
-            $('#queryDifficulty').modal('hide');
-            $('#queryText').prop('disabled', false);
-            $('#queryDifficultyButton').hide();
-            $('#search').show();
-        }
+    var timer;
+
+    function incrementTimer() {
+        var cur = parseInt($("#openTimer").val());
+        $("#openTimer").val(cur + 1);
+    }
+
+    $(document).ready(function() {
+        $('#search').hide();
+        $('#queryText').prop('disabled', true);
+
+        // Query difficulty window timer
+        $('#queryDifficulty').on('shown.bs.modal', function() {
+            timer = setInterval(incrementTimer, 1000);
+        });
+        $('#queryDifficulty').on('hidden.bs.modal', function() {
+            clearInterval(timer);
+        });
+
+        // onclick for query difficulty
+        $('#queryDifficultySubmit').on('click', function () {
+            var empty = $('#queryDifficultyTextarea').val() == "";
+            empty = empty && $(':checkbox:checked').length == 0;
+            if (empty) {
+                alert("Please choose one or more options before continuing.");
+            }
+            else {
+                $.post("{% url 'submit_query_difficulty' task_id=task_id %}", 
+                    $('#queryDifficultyForm').serialize());
+                $('#queryDifficulty').modal('hide');
+                $('#queryText').prop('disabled', false);
+                $('#queryDifficultyButton').hide();
+                $('#search').show();
+            }
+        });
+
     });
     {% else %}
     $('#queryDifficultyButton').hide();

@@ -55,13 +55,15 @@
 
 {% block docend %}
 <script type="text/javascript" language="javascript"> 
-$('.searchiframe').css('height', $(window).height() - 60 + 'px');
-$("#question").popover({
-    animation:true,
-    html:true,
-    title:'<span class="text-info"><strong>Question:</strong></span>'+
-             '<button type="button" id="close" class="close" onclick="$(&quot;#question&quot;).popover(&quot;hide&quot;);">&times;</button>'
-  });
-$("#question").popover('show');
+$(document).ready(function() {
+  $('.searchiframe').css('height', $(window).height() - 60 + 'px');
+  $("#question").popover({
+      animation:true,
+      html:true,
+      title:'<span class="text-info"><strong>Question:</strong></span>'+
+               '<button type="button" id="close" class="close" onclick="$(&quot;#question&quot;).popover(&quot;hide&quot;);">&times;</button>'
+    });
+  $("#question").popover('show');
+});
 </script>
 {% endblock %}

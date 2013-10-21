@@ -1,4 +1,5 @@
 import base64
+from django import forms
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -88,27 +89,6 @@ class PlayerTask(models.Model):
         ordering = ['order']
 
 
-class Event(models.Model):
-    player_task = models.ForeignKey(PlayerTask)
-    event = models.CharField(max_length=10, db_index=True, help_text=u'Type of '
-        'event: Query, Click, Answer, etc.')
-    time = models.DateTimeField(auto_now_add=True, help_text=u'Time when event '
-        'happened')
-    query = models.CharField(max_length=1024, blank=True, null=True,
-        help_text=u'Query text if the event is query')
-    serp = models.ForeignKey(Serp, blank=True, null=True, help_text=u'SERP')
-    url = models.URLField(blank=True, null=True, help_text=u'Clicked url')
-    extra_data = models.TextField(blank=True, null=True,
-        help_text=u'Extra information about the event')
-
-    def __unicode__(self):
-        return self.event + ': ' + (self.query if self.query else '') + \
-            (self.url if self.url else '') + ' (' + str(self.time) + ')'
-
-    class Meta:
-        ordering = ['player_task', 'time']
-
-
 class Serp(models.Model):
     query = models.CharField(max_length=1024, db_index=True,
         help_text=u'Text of the query')
@@ -132,10 +112,36 @@ class Serp(models.Model):
         unique_together = ("query", "engine")
 
 
+class Event(models.Model):
+    player_task = models.ForeignKey(PlayerTask)
+    event = models.CharField(max_length=10, db_index=True, help_text=u'Type of '
+        'event: Query, Click, Answer, etc.')
+    time = models.DateTimeField(auto_now_add=True, help_text=u'Time when event '
+        'happened')
+    query = models.CharField(max_length=1024, blank=True, null=True,
+        help_text=u'Query text if the event is query')
+    serp = models.ForeignKey(Serp, blank=True, null=True, help_text=u'SERP')
+    url = models.URLField(blank=True, null=True, help_text=u'Clicked url')
+    extra_data = models.TextField(blank=True, null=True,
+        help_text=u'Extra information about the event')
+
+    def __unicode__(self):
+        return self.event + ': ' + (self.query if self.query else '') + \
+            (self.url if self.url else '') + ' (' + str(self.time) + ')'
+
+    class Meta:
+        ordering = ['player_task', 'time']
+
+
 class QueryDifficulty(models.Model):
     player_task = models.ForeignKey(PlayerTask)
     serp = models.ForeignKey(Serp, help_text=u'Search engine results')
-    difficulty = models.CharField(max_length=512, help_text=u'Type of difficulty')
+    time = models.DateTimeField(auto_now_add=True, help_text=u'Time when user '
+        'judged serp')
+    panelDwellTime = models.PositiveIntegerField(help_text=u'How long did user '
+        'look at the query difficulty panel')
+    difficulty = models.TextField(help_text=u'Type of difficulty')
 
     def __unicode__(self):
-        return self.player_task.player_game.player.user.username + " - " + self.serp.query
+        return self.player_task.player_game.player.user.username + " - " + \
+            self.serp.query

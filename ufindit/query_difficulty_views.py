@@ -17,13 +17,15 @@ def submit_query_difficulty(request, task_id):
         saves answers to the database.
     """
     assert request.method == "POST"
+    assert "openTimer" in request.POST
     player_task = get_object_or_404(PlayerTask, id=task_id)
     serp = get_object_or_404(Serp, id=request.POST["serpid"])
+    time = request.POST["openTimer"]
     difficulty = ""
     if "query_difficulty" in request.POST:
-        difficulty += request.POST["query_difficulty"]
+        difficulty += "\n".join(request.POST.getlist("query_difficulty"))
     if len(request.POST["other_reason"]) > 0:
         difficulty += "\n" + request.POST["other_reason"]
-    QueryDifficulty(player_task=player_task, serp=serp,
+    QueryDifficulty(player_task=player_task, serp=serp, panelDwellTime=int(time),
         difficulty=difficulty).save()
     return HttpResponse("ok")
