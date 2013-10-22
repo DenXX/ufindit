@@ -10,9 +10,10 @@ class EventLogger:
         self.task = task
 
     @staticmethod
-    def query(player_task, query, serp):
+    def query(player_task, query, serp, page):
         assert isinstance(player_task, PlayerTask)
-        Event(player_task=player_task, event='Q', query=query, serp=serp).save()
+        Event(player_task=player_task, event='Q', query=query, serp=serp,
+            page=page).save()
 
     @staticmethod
     def click(player_task, url, serp):

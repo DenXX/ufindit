@@ -2,6 +2,7 @@ from datetime import datetime
 from search_proxy import SearchProxy
 from urllib import unquote
 
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
@@ -9,6 +10,9 @@ from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.template import RequestContext
+from django.views.decorators.cache import cache_control
+from django.views.generic.base import View
+
 
 from httpproxy.views import HttpProxy
 from ufindit.forms import RegistrationForm
@@ -43,6 +47,7 @@ def register(request):
 
 
 @login_required
+@cache_control(no_cache=True, must_revalidate=True, no_store=True, max_age=0)
 def search(request, task_id, template='serp.html'):
     context = {"task_id":task_id}
     user = request.user
@@ -56,7 +61,6 @@ def search(request, task_id, template='serp.html'):
         context["serpid"] = search_results.id
         # Log query event
         serp = get_object_or_404(Serp, id=search_results.id)
-        EventLogger.query(player_task, query, serp)
         paginator = Paginator(search_results, settings.RESULTS_PER_PAGE)
         page = request.GET.get('page')
         try:
@@ -71,32 +75,83 @@ def search(request, task_id, template='serp.html'):
         start_page = max([1, page - 3])
         end_page = min([paginator.num_pages + 1, page + 4])
         context["page_numbers"] = range(start_page, end_page)
+        # Log query event
+        EventLogger.query(player_task, query, serp, context["results"].number)
     context["enable_emu"] = settings.ENABLE_EMU_LOGGING
     return render(request, template, context)
 
 
-@login_required
-def game(request, game_id):
-    game = get_object_or_404(Game, id=game_id, active=True)
-    player, _ = Player.objects.get_or_create(user=request.user)
-    player_game, _ = PlayerGame.objects.get_or_create(player=player, game=game)
-    if player_game.current_task_index >= \
-        PlayerTask.objects.filter(player_game=player_game).count():
-        if not player_game.finish:
-            player_game.finish = datetime.now()
-            player_game.save()
-        return render(request, 'game_over.html', {'game' : game})
+class GameView(View):
+    """
+        Top level page for the game. The pages shows game top panel and 
+        search box in a frame. It also accepts answers and skips with POST
+        requests.
+    """
 
-    current_task = get_object_or_404(PlayerTask, player_game=player_game,
-        order=player_game.current_task_index)
-    if current_task.start == None:
-        current_task.start = datetime.now()
-        current_task.save()
-    # Check if the task wasn't finished
-    assert current_task.finish == None
-    
-    # If form was submitted, either skipped or answered.
-    if request.method == "POST":
+    def check_user(self, request):
+        if request.user.is_authenticated():
+            return True
+        if 'workerId' not in request.GET:
+            return False
+        workerId = request.GET['workerId']
+        hitId = request.GET['hitId']
+        assignmentId = request.GET['assignmentId']
+        game = Game.objects.filter(hitId=hitId, active=True)
+        if len(game) != 1:
+            return False
+        user = self.get_mturk_user(workerId)
+        login(request, user)
+        return user.is_authenticated()
+
+    def get_mturk_user(self, workerId):
+        try:
+            player = Player.objects.get(mturk_worker_id=workerId)
+        except Player.DoesNotExist:
+            user = User.objects.create_user(workerId, workerId+'@mturk.com',
+                workerId)
+            user.save()
+            player = Player.objects.create(user=user, mturk_worker_id=workerId)
+            player.save()
+        user = authenticate(username=workerId+'@mturk.com', password=workerId)
+        return user
+
+
+    def dispatch(self, request, **kwargs):
+        if not self.check_user(request):
+            raise Http404()
+        game = get_object_or_404(Game, id=kwargs['game_id'], active=True)
+        player, _ = Player.objects.get_or_create(user=request.user)
+        player_game, created = PlayerGame.objects.get_or_create(player=player,
+            game=game)
+
+        # Save assignment ID if just created
+        if created and ('assignmentId' in request.GET):
+            player_game.assignmentId = request.GET['assignmentId']
+            player_game.save()
+
+        if player_game.current_task_index >= \
+            PlayerTask.objects.filter(player_game=player_game).count():
+            if not player_game.finish:
+                player_game.finish = datetime.now()
+                player_game.save()
+            return render(request, 'game_over.html', {'game' : game})
+
+        current_task = get_object_or_404(PlayerTask, player_game=player_game,
+            order=player_game.current_task_index)
+        if current_task.start == None:
+            current_task.start = datetime.now()
+            current_task.save()
+        # Check if the task wasn't finished
+        assert current_task.finish == None
+        
+        # If form was submitted, either skipped or answered.
+        if request.method == "POST":
+            return self.post(request, player_game, current_task)
+        else:
+            return self.get(request, game, current_task)
+
+
+    def post(self, request, player_game, current_task):
         if request.POST.has_key("save_answer"):
             current_task.answer = request.POST['answer']
             current_task.answer_url = request.POST['answer_url']
@@ -108,10 +163,12 @@ def game(request, game_id):
         current_task.finish = datetime.now()
         current_task.save()
         # Redirect back so that refresh doesn't cause form resend.
-        return HttpResponseRedirect(reverse('game', kwargs={'game_id':game_id}))
+        return HttpResponseRedirect(reverse('game',
+            kwargs={'game_id':kwargs['game_id']}))
 
-    context = { "game" : game, "player_task": current_task }
-    return render(request, 'game.html', context)
+    def get(self, request, game, current_task):
+        context = { "game" : game, "player_task": current_task }
+        return render(request, 'game.html', context)
 
 
 def http_proxy_decorator(request, task_id, serp_id, url):

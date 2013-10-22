@@ -4,11 +4,14 @@ from django.conf import settings
 from django.contrib import admin
 from httpproxy.views import HttpProxy
 
+from ufindit.views import GameView
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', 'ufindit.views.index', name='index'),
-    url(r'^game/(?P<game_id>[0-9]+)/$', 'ufindit.views.game', name='game'),
+    #url(r'^game/(?P<game_id>[0-9]+)/$', 'ufindit.views.game', name='game'),
+    url(r'^game/(?P<game_id>[0-9]+)/$', GameView.as_view(), name='game'),
 
     url(r'^(?P<task_id>[0-9]+)/s$', 'ufindit.views.search', 
         {'template':settings.SERP_TEMPLATE_NAME}, name='search'),
