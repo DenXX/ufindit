@@ -10,15 +10,14 @@ class EventLogger:
         self.task = task
 
     @staticmethod
-    def query(player_task, query, serpid):
+    def query(player_task, query, serp):
         assert isinstance(player_task, PlayerTask)
-        Event(player_task=player_task, event='Q', query=query,
-            serp=Serp.objects.get(id=serpid)).save()
+        Event(player_task=player_task, event='Q', query=query, serp=serp).save()
 
     @staticmethod
-    def click(player_task, url):
+    def click(player_task, url, serp):
         assert isinstance(player_task, PlayerTask)
-        Event(player_task=player_task, event='C', url=url).save()
+        Event(player_task=player_task, event='C', serp=serp, url=url).save()
 
     @staticmethod
     def emu_log_event(player_task, url):

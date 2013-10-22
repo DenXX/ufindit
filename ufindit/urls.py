@@ -36,8 +36,8 @@ urlpatterns = patterns('',
         view_name='http_proxy', mode='playrecord', user_agent='Mozilla/5.0'),
         name='http_proxy'),
     # Serp links
-    url(r'^http/(?P<task_id>[0-9]*)/(?P<url>.*)$', 'ufindit.views.http_proxy_decorator',
-        name='http_proxy_decorator'),
+    url(r'^http/(?P<task_id>[0-9]*)/(?P<serp_id>[0-9]*)/(?P<url>.*)$', 
+        'ufindit.views.http_proxy_decorator', name='http_proxy_decorator'),
 
     # EMU and event logging
     url(r'^(?P<task_id>[0-9]*)/emu/emu.js$', 'ufindit.emu_views.emu_js',
@@ -46,6 +46,10 @@ urlpatterns = patterns('',
         name='emu_log_event'),
     url(r'^(?P<task_id>[0-9]*)/emu/save_page$', 'ufindit.emu_views.save_page',
         name='emu_save_page'),
+
+    # MTurk related urls
+    url(r'^(?P<game_id>[0-9]*)/mturk_publish/(?P<sandbox>[01])$', 
+        'ufindit.mturk.publish_game', name='mturk_publish_game'),
 
     # Query difficulty URL
     url(r'^(?P<task_id>[0-9]*)/qdiff$', 

@@ -30,6 +30,8 @@ class Game(models.Model):
         help_text=u'Is the game active/shown in the list')
     randomized = models.BooleanField(default=False,
         help_text=u'Are game questions randomized for each participant')
+    hitId = models.CharField(max_length=255, blank=True, null=True, 
+        db_index=True, help_text=u'If game is in MTurk this is the hitId')
 
     def __unicode__(self):
         return self.name
@@ -47,6 +49,8 @@ class PlayerGame(models.Model):
             'Index by order in PlayerTask')
     finish = models.DateTimeField(blank=True, null=True,
         help_text=u'End time of the game')
+    assignmentId = models.CharField(max_length=255, blank=True, null=True,
+        help_text=u'AssignmentID if this game is played through MTurk')
 
     def save(self, *args, **kwargs):
         created = not self.pk

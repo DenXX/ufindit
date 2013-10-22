@@ -23,7 +23,15 @@
                 <table class="table">
                     <tr><td>Name</td></tr>
                     {% for game in games %}
-                    <tr><td><a class="btn" href="{% url 'game' game_id=game.id %}">{{ game.name }}</a>
+                    <tr><td><span>{{ game.name }}</span>
+                        &nbsp;&nbsp;&nbsp;<a class="btn btn-success" href="{% url 'game' game_id=game.id %}">Play</a>
+                        {% if user.is_staff %}
+                            {% if game.hitId %}
+                                <span class="badge">HitID: {{ game.hitId }}</span>
+                            {% else %}
+                                <a href="{% url 'mturk_publish_game' sandbox=1 game_id=game.id %}" class="btn btn-info">Publish in MTurk Sandbox</a>&nbsp;<a href="{% url 'mturk_publish_game' sandbox=0 game_id=game.id %}" class="btn btn-danger">Publish in MTurk</a>
+                            {% endif %}
+                        {% endif %}
                     </td></tr>
                     {% endfor %}
                 </table>

@@ -8,17 +8,18 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
+from django.template import RequestContext
 
 from httpproxy.views import HttpProxy
 from ufindit.forms import RegistrationForm
 from ufindit.logger import EventLogger
-from ufindit.models import Game, Player, PlayerGame, PlayerTask
+from ufindit.models import Game, Player, PlayerGame, PlayerTask, Serp
 
 import settings
 
 def index(request):
-    context = {}
-    context["games"] = Game.objects.filter(active = True)
+    context = RequestContext(request, 
+        {'games' : Game.objects.filter(active = True)})
     return render(request, 'index.html', context)
 
 
@@ -54,7 +55,8 @@ def search(request, task_id, template='serp.html'):
         search_results = search_proxy.search(query)
         context["serpid"] = search_results.id
         # Log query event
-        EventLogger.query(player_task, query, search_results.id)
+        serp = get_object_or_404(Serp, id=search_results.id)
+        EventLogger.query(player_task, query, serp)
         paginator = Paginator(search_results, settings.RESULTS_PER_PAGE)
         page = request.GET.get('page')
         try:
@@ -112,8 +114,9 @@ def game(request, game_id):
     return render(request, 'game.html', context)
 
 
-def http_proxy_decorator(request, task_id, url):
+def http_proxy_decorator(request, task_id, serp_id, url):
     player_task = get_object_or_404(PlayerTask, id=task_id)
-    EventLogger.click(player_task, url)
+    serp = get_object_or_404(Serp, id=serp_id)
+    EventLogger.click(player_task, url, serp=serp)
     return HttpResponseRedirect(reverse('http_proxy', kwargs={'url':url,
         'task_id':task_id}))
