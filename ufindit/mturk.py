@@ -20,7 +20,7 @@ def publish_game_view(request, game_id, sandbox):
     """
     assert request.method == "GET"
     mturk = MTurkProxy(sandbox)
-    mturk.submit_game(get_object_or_404(Game, id=game_id))
+    mturk.submit_game(request, get_object_or_404(Game, id=game_id))
     return HttpResponseRedirect(reverse('index'))
 
 
@@ -62,9 +62,10 @@ class MTurkProxy:
             qualifications = quals
         )
 
-    def submit_game(self, game):
-        self.paramdict['question'] = ExternalQuestion(reverse('game', 
-            kwargs={'game_id':game.id}), settings.MTURK_FRAME_HEIGHT)
+    def submit_game(self, request, game):
+        self.paramdict['question'] = ExternalQuestion(
+            request.build_absolute_uri(reverse('game', 
+                kwargs={'game_id':game.id})), settings.MTURK_FRAME_HEIGHT)
         hit = self.mturk_connection.create_hit( **self.paramdict )[0]
         game.hitId = hit.HITId
         game.save()

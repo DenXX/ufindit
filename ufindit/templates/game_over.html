@@ -11,6 +11,9 @@
       <h1>Congratulations!</h1>
   </div>
   <div class="alert alert-success">You have successfully finished all the tasks in the game: {{ game }}.<br />
+  {% if message %}
+  {{ message }}<br />
+  {% endif %}
   <a class="alert-link" href="{% url 'index' %}">Return to the main page</a>.</div>
 </div>
 {% endblock %}

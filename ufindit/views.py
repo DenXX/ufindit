@@ -1,6 +1,7 @@
 from datetime import datetime
 from search_proxy import SearchProxy
 from urllib import unquote
+import urllib2
 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
@@ -115,6 +116,18 @@ class GameView(View):
         user = authenticate(username=workerId+'@mturk.com', password=workerId)
         return user
 
+    def finish_game(self, request, player_game):
+        context = {"message": '', 'game' : player_game.game}
+        if not player_game.finish:
+            player_game.finish = datetime.now()
+            player_game.save()
+        if player_game.assignmentId:
+            response = urllib2.urlopen(settings.MTURK_TASK_SUBMIT_URL +
+                urllib.urlencode(dict(
+                    assignmentId=player_game.mturk_assignment_id,
+                    sb="submit HIT")))
+            context["message"] = response.read()
+        return render(request, 'game_over.html', context)
 
     def dispatch(self, request, **kwargs):
         # Check if the current request is a demo query from mturk
@@ -136,10 +149,7 @@ class GameView(View):
 
         if player_game.current_task_index >= \
             PlayerTask.objects.filter(player_game=player_game).count():
-            if not player_game.finish:
-                player_game.finish = datetime.now()
-                player_game.save()
-            return render(request, 'game_over.html', {'game' : game})
+            return self.finish_game(request, player_game)
 
         current_task = get_object_or_404(PlayerTask, player_game=player_game,
             order=player_game.current_task_index)
