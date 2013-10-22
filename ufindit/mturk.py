@@ -14,7 +14,7 @@ from ufindit.models import Game
 import settings
 
 @staff_member_required
-def publish_game(request, game_id, sandbox):
+def publish_game_view(request, game_id, sandbox):
     """
         This view is called when we need to publish a game in Amazon MTurk
     """

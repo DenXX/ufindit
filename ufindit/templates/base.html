@@ -33,8 +33,9 @@
             <a class="navbar-brand" href="/">uFindIt</a>
           </div>
           <div class="navbar-collapse collapse">
-            {% block navbar_content %}
-            {% endblock %}
+          {% block navbar_content %}
+          {% endblock %}
+          {% block loginbox %}
             {% if not user.is_authenticated %}
               <ul class="nav navbar-nav navbar-right">
               <li>
@@ -57,6 +58,7 @@
                 <li><a href="{% url 'logout' %}">Sign out</a></li>
               </ul>
             {% endif %}
+          {% endblock %}
           </div><!--/.navbar-collapse -->
         </div>
       </div>

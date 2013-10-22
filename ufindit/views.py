@@ -117,6 +117,11 @@ class GameView(View):
 
 
     def dispatch(self, request, **kwargs):
+        # Check if the current request is a demo query from mturk
+        if 'assignmentId' in request.GET and request.GET['assignmentId'] == \
+            'ASSIGNMENT_ID_NOT_AVAILABLE':
+            return HttpResponseRedirect(reverse('mturk_demo'))
+
         if not self.check_user(request):
             raise Http404()
         game = get_object_or_404(Game, id=kwargs['game_id'], active=True)
@@ -164,7 +169,7 @@ class GameView(View):
         current_task.save()
         # Redirect back so that refresh doesn't cause form resend.
         return HttpResponseRedirect(reverse('game',
-            kwargs={'game_id':kwargs['game_id']}))
+            kwargs={'game_id':player_game.game.id}))
 
     def get(self, request, game, current_task):
         context = { "game" : game, "player_task": current_task }

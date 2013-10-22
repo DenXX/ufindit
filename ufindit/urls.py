@@ -2,6 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib import admin
+from django.views.generic import TemplateView
 from httpproxy.views import HttpProxy
 
 from ufindit.views import GameView
@@ -52,7 +53,11 @@ urlpatterns = patterns('',
 
     # MTurk related urls
     url(r'^(?P<game_id>[0-9]*)/mturk_publish/(?P<sandbox>[01])$', 
-        'ufindit.mturk.publish_game', name='mturk_publish_game'),
+        'ufindit.mturk.publish_game_view', name='mturk_publish_game'),
+    url(r'^mturk_demo$', TemplateView.as_view(template_name='mturk_demo.html'),
+        name='mturk_demo'),
+    url(r'^mturk_demo_search$', TemplateView.as_view(
+        template_name='mturk_demo_search.html'),name='mturk_demo_search'),
 
     # Query difficulty URL
     url(r'^(?P<task_id>[0-9]*)/qdiff$', 
