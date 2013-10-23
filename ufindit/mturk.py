@@ -64,8 +64,8 @@ class MTurkProxy:
 
     def submit_game(self, request, game):
         self.paramdict['question'] = ExternalQuestion(
-            request.build_absolute_uri(reverse('game', 
-                kwargs={'game_id':game.id})), settings.MTURK_FRAME_HEIGHT)
+           request.build_absolute_uri(reverse('game', 
+               kwargs={'game_id':game.id})), settings.MTURK_FRAME_HEIGHT)
         hit = self.mturk_connection.create_hit( **self.paramdict )[0]
         game.hitId = hit.HITId
         game.save()
