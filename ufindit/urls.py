@@ -11,8 +11,9 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', 'ufindit.views.index', name='index'),
-    #url(r'^game/(?P<game_id>[0-9]+)/$', 'ufindit.views.game', name='game'),
     url(r'^game/(?P<game_id>[0-9]+)/$', GameView.as_view(), name='game'),
+    url(r'^game/(?P<game_id>[0-9]+)/over$', GameView.as_view(is_game_over=True),
+        name='game_over'),
 
     url(r'^(?P<task_id>[0-9]+)/s$', 'ufindit.views.search', 
         {'template':settings.SERP_TEMPLATE_NAME}, name='search'),
@@ -59,7 +60,7 @@ urlpatterns = patterns('',
     url(r'^mturk_demo_search$', TemplateView.as_view(
         template_name='mturk_demo_search.html'), name='mturk_demo_search'),
 
-    # Query difficulty URL
+    # Query difficulty URLs
     (r'^qdiff/', include('querydifficulty.urls', app_name='querydifficulty',
         namespace='querydifficulty')),
 

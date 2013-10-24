@@ -22,25 +22,35 @@
         </div>
         <div class="modal-body">
           <form class="form-horizontal" id="queryDifficultyForm">
+            {% csrf_token %}
             <input type="hidden" name="serpid" value="{{ serpid }}">
             <input type="hidden" id="openTimer" name="openTimer" value="0">
             <fieldset>
             <!-- Multiple Checkboxes -->
             <div class="control-group">
               <div class="controls">
-                <label class="checkbox" for="query_difficulty-0">
-                  <input type="checkbox" name="query_difficulty" id="query_difficulty-0" value="No relevant results">
-                  No relevant results
-                </label>
-                <label class="checkbox" for="query_difficulty-1">
-                  <input type="checkbox" name="query_difficulty" id="query_difficulty-1" value="I just didn't like it.">
-                  I just didn't like it.
-                </label>
-                <label class="checkbox" for="query_difficulty-2">
-                  <input type="checkbox" name="query_difficulty" id="query_difficulty-2" value="Some other reason">
-                  Some other reason
-                </label>
-                <textarea cols="50" rows="3" name="other_reason" id="queryDifficultyTextarea" placeholder="Other reason..."></textarea>
+                <div class="checkbox">
+                  <label for="query_difficulty-0">
+                    <input type="checkbox" name="query_difficulty" id="query_difficulty-0" value="No relevant results">
+                    No relevant results
+                  </label>
+                  </div>
+                <div class="checkbox">
+                  <label for="query_difficulty-1">
+                    <input type="checkbox" name="query_difficulty" id="query_difficulty-1" value="I just didn't like it.">
+                    I just didn't like it.
+                  </label>
+                </div>
+                <div class="checkbox">
+                  <label for="query_difficulty-2">
+                    <input type="checkbox" name="query_difficulty" id="query_difficulty-2" value="Some other reason">
+                    Some other reason
+                  </label>
+                </div>
+                <br />
+                <div class="textarea">
+                  <textarea rows="3" name="other_reason" class="form-control" id="queryDifficultyTextarea" placeholder="Other reason..."></textarea>
+                </div>
               </div>
             </div>
 

@@ -42,7 +42,9 @@ def register(request):
             password = registration_form.cleaned_data['password']
             user = User.objects.create_user(email, email, password)
             user.save()
-            return render(request, 'registration.html', context)
+            user = authenticate(username=email, password=password)
+            login(request, user)
+            return HttpResponseRedirect(reverse('index'))
     context["registration_form"] = registration_form
     return render(request, 'registration.html', context)
 
@@ -88,6 +90,8 @@ class GameView(View):
         search box in a frame. It also accepts answers and skips with POST
         requests.
     """
+    is_game_over=False
+    game_over_template = settings.GAME_OVER_TEMPLATE
 
     def check_user(self, request):
         if request.user.is_authenticated():
@@ -117,7 +121,6 @@ class GameView(View):
         return user
 
     def finish_game(self, request, player_game):
-        context = {"message": '', 'game' : player_game.game}
         if not player_game.finish:
             player_game.finish = datetime.now()
             player_game.save()
@@ -126,8 +129,12 @@ class GameView(View):
                 urllib.urlencode(dict(
                     assignmentId=player_game.mturk_assignment_id,
                     sb="submit HIT")))
-            context["message"] = response.read()
-        return render(request, 'game_over.html', context)
+        return HttpResponseRedirect(reverse('game_over',
+            kwargs={'game_id':player_game.game.id}))
+
+    def game_over(self, request, player_game):
+        context = {'message':'', 'game':player_game.game}
+        return render(request, self.game_over_template, context)
 
     def dispatch(self, request, **kwargs):
         # Check if the current request is a demo query from mturk
@@ -141,6 +148,11 @@ class GameView(View):
         player, _ = Player.objects.get_or_create(user=request.user)
         player_game, created = PlayerGame.objects.get_or_create(player=player,
             game=game)
+
+        if self.is_game_over:
+            if not player_game.finish:
+                raise Http404()
+            return self.game_over(request, player_game)
 
         # Save assignment ID if just created
         if created and ('assignmentId' in request.GET):

@@ -6,8 +6,8 @@ from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
 from ufindit.logger import EventLogger
-from ufindit.models import PlayerTask, Serp
-from querydifficulty.models import QueryDifficulty
+from ufindit.models import Player, PlayerTask, Serp, Game, PlayerGame
+from querydifficulty.models import QueryDifficulty, Survey
 
 @csrf_exempt
 def submit_query_difficulty(request, task_id):
@@ -28,3 +28,30 @@ def submit_query_difficulty(request, task_id):
     QueryDifficulty(player_task=player_task, serp=serp, panelDwellTime=int(time),
         difficulty=difficulty).save()
     return HttpResponse("ok")
+
+
+@login_required
+def submit_survey_view(request, game_id):
+    if request.method != 'POST':
+        raise Http404()
+
+    game = get_object_or_404(Game, id=game_id, active=True)
+    fields = ['like', 'again', 'easy', 'distract', 'query_easy']
+    for field in fields:
+        if field not in request.POST:
+            return render(request, 'survey.html', {'game':game, 'errors': True})
+
+    player = get_object_or_404(Player, user=request.user)
+    player_game = get_object_or_404(PlayerGame, player=player, game=game)
+    if not player_game.finish:
+        raise Http404()
+
+    survey = Survey(player_game=player_game, liked=request.POST['like'],
+        repeat=request.POST['again'], difficult=request.POST['easy'],
+        distracting=request.POST['distract'], qdiffEasy=request.POST['query_easy'],
+        qdiffComment=request.POST['qdiff_feedback'] if 'qdiff_feedback' in \
+            request.POST else '',
+        comments=request.POST['feedback'] if 'feedback' in request.POST else '')
+    survey.save()
+
+    return render(request, 'game_over.html', {'game':game})

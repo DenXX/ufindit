@@ -3,7 +3,7 @@ from django import forms
 from django.db import models
 from django.contrib.auth.models import User
 
-from ufindit.models import Serp, PlayerTask
+from ufindit.models import Serp, PlayerTask, PlayerGame
 
 class QueryDifficulty(models.Model):
     player_task = models.ForeignKey(PlayerTask)
@@ -17,3 +17,24 @@ class QueryDifficulty(models.Model):
     def __unicode__(self):
         return self.player_task.player_game.player.user.username + " - " + \
             self.serp.query
+
+class Survey(models.Model):
+    player_game = models.ForeignKey(PlayerGame)
+    liked = models.IntegerField(help_text=u'How did user like the game '
+        '(from -2..2)')
+    repeat = models.IntegerField(help_text=u'How likely will user play again '
+        '(from -2..2)')
+    difficult = models.IntegerField(help_text=u'How difficult the game was '
+        '(from -2..2)')
+    distracting = models.IntegerField(help_text=u'How distracting was it to answer '
+        'questions on what didn\'t you like in search results?')
+    qdiffEasy = models.IntegerField(help_text=u'How easy was it to answer '
+        'questions on what didn\'t you like in search results?')
+    qdiffComment = models.TextField(blank=True, null=True, help_text=u'User '
+        'comments on query difficulty questions')
+    comments = models.TextField(blank=True, null=True, help_text=u'User '
+        'comments on the game')
+
+
+    def __unicode__(self):
+        return u'Survey: ' + unicode(self.player_game)
