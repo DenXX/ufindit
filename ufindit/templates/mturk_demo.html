@@ -27,7 +27,6 @@
 
 {% block content %}
 <form method="POST">
-  {% csrf_token %}
   <div class="modal fade" id="answerModal" tabindex="-1" role="dialog" aria-labelledby="Answer" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -39,7 +38,7 @@
             <div class="panel panel-success">
                 <div class="panel-heading">Question:</div>
                 <div class="panel-body">
-                    {{ player_task.task.text }}
+                    Recently one of your friends got interested in the career of a legendary basketball player Larry Bird. While basketball career of this player is well documented, your friend couldn't find anything about Bird's major in college. Could you find an answer to this question?
                 </div>
             </div>
             <input type="text" class="form-control" id="answer" name="answer" placeholder="Answer" autocomplete="off"><br />
