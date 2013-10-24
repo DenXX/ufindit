@@ -1,0 +1,100 @@
+{% extends 'serp.html' %}
+
+{% block searchform %}
+    <form class="navbar-form" method="GET">
+      {% csrf_token %}
+      <div class="input-append">
+        <input type="text" value="{{ query }}" id="queryText" name="q" size="60" autocomplete="off">
+        <button type="submit" class="btn btn-success" id="search" data-loading-text="Searching...">Search</button>
+        <button type="button" data-toggle="modal" id="queryDifficultyButton" href="#queryDifficulty" class="btn btn-warning">I can't find the answer!</button>
+      </div>
+    </form>
+{% endblock %}
+
+{% block extracode %}
+  <!-- Modal -->
+  <div class="modal fade" id="queryDifficulty" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">What exactly didn't you like about the search results?</h4>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal" id="queryDifficultyForm">
+            <input type="hidden" name="serpid" value="{{ serpid }}">
+            <input type="hidden" id="openTimer" name="openTimer" value="0">
+            <fieldset>
+            <!-- Multiple Checkboxes -->
+            <div class="control-group">
+              <div class="controls">
+                <label class="checkbox" for="query_difficulty-0">
+                  <input type="checkbox" name="query_difficulty" id="query_difficulty-0" value="No relevant results">
+                  No relevant results
+                </label>
+                <label class="checkbox" for="query_difficulty-1">
+                  <input type="checkbox" name="query_difficulty" id="query_difficulty-1" value="I just didn't like it.">
+                  I just didn't like it.
+                </label>
+                <label class="checkbox" for="query_difficulty-2">
+                  <input type="checkbox" name="query_difficulty" id="query_difficulty-2" value="Some other reason">
+                  Some other reason
+                </label>
+                <textarea cols="50" rows="3" name="other_reason" id="queryDifficultyTextarea" placeholder="Other reason..."></textarea>
+              </div>
+            </div>
+
+            </fieldset>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" id="queryDifficultySubmit" class="btn btn-primary">Submit</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+  <script language="javascript">
+    {% if query %}
+    var timer;
+
+    function incrementTimer() {
+        var cur = parseInt($("#openTimer").val());
+        $("#openTimer").val(cur + 1);
+    }
+
+    $(document).ready(function() {
+        $('#search').hide();
+        $('#queryText').prop('disabled', true);
+
+        // Query difficulty window timer
+        $('#queryDifficulty').on('shown.bs.modal', function() {
+            timer = setInterval(incrementTimer, 1000);
+        });
+        $('#queryDifficulty').on('hidden.bs.modal', function() {
+            clearInterval(timer);
+        });
+
+        // onclick for query difficulty
+        $('#queryDifficultySubmit').on('click', function () {
+            var empty = $('#queryDifficultyTextarea').val() == "";
+            empty = empty && $(':checkbox:checked').length == 0;
+            if (empty) {
+                alert("Please choose one or more options before continuing.");
+            }
+            else {
+                $.post("{% url 'querydifficulty:submit_query_difficulty' task_id=task_id %}", 
+                    $('#queryDifficultyForm').serialize());
+                $('#queryDifficulty').modal('hide');
+                $('#queryText').prop('disabled', false);
+                $('#queryDifficultyButton').hide();
+                $('#search').show();
+            }
+        });
+
+    });
+    {% else %}
+    $('#queryDifficultyButton').hide();
+    {% endif %}
+  </script>
+{% endblock %}
