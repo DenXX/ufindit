@@ -57,12 +57,11 @@ urlpatterns = patterns('',
     url(r'^mturk_demo$', TemplateView.as_view(template_name='mturk_demo.html'),
         name='mturk_demo'),
     url(r'^mturk_demo_search$', TemplateView.as_view(
-        template_name='mturk_demo_search.html'),name='mturk_demo_search'),
+        template_name='mturk_demo_search.html'), name='mturk_demo_search'),
 
     # Query difficulty URL
-    url(r'^(?P<task_id>[0-9]*)/qdiff$', 
-        'ufindit.query_difficulty_views.submit_query_difficulty',
-        name='submit_query_difficulty'),
+    (r'^qdiff/', include('querydifficulty.urls', app_name='querydifficulty',
+        namespace='querydifficulty')),
 
     # Admin views
     url(r'^admin/', include(admin.site.urls)),

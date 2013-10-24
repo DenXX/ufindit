@@ -1,5 +1,5 @@
 from django.contrib import admin
-from ufindit.models import Game, Task, Player, PlayerGame, PlayerTask, Event, Serp, QueryDifficulty
+from ufindit.models import Game, Task, Player, PlayerGame, PlayerTask, Event, Serp
 
 admin.site.register(Game)
 admin.site.register(Task)
@@ -9,4 +9,3 @@ admin.site.register(PlayerGame)
 admin.site.register(PlayerTask)
 admin.site.register(Event)
 admin.site.register(Serp)
-admin.site.register(QueryDifficulty)

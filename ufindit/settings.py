@@ -36,11 +36,6 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
         'LOCATION': 'ufindit_cache',
     },
-    # Cache used for storing and retrieving json search results
-    'search': {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'search_cache',
-    }
 }
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
@@ -130,7 +125,8 @@ ROOT_URLCONF = 'ufindit.urls'
 WSGI_APPLICATION = 'ufindit.wsgi.application'
 
 TEMPLATE_DIRS = (
-    "/home/dsavenk/Projects/irlab/ufindit/ufindit/templates"
+    "/home/dsavenk/Projects/irlab/ufindit/ufindit/templates",
+    "/home/dsavenk/Projects/irlab/ufindit/querydifficulty/templates",
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -143,7 +139,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'httpproxy',
-    'ufindit'
+    'ufindit',
+    'querydifficulty',
 )
 
 AUTHENTICATION_BACKENDS = (
