@@ -31,13 +31,13 @@ def index(request):
 def register(request):
     context = {}
     registration_form = RegistrationForm()
-    if request.method == "POST":
+    if request.method == 'POST':
         registration_form = RegistrationForm(request.POST)
         if registration_form.is_valid():
             email = registration_form.cleaned_data['email']
             if User.objects.filter(email=email).exists():
                 context['errors'] = 'User with this email already exists'
-                context["registration_form"] = registration_form
+                context['registration_form'] = registration_form
                 return render(request, 'registration.html', context)
             password = registration_form.cleaned_data['password']
             user = User.objects.create_user(email, email, password)
@@ -45,51 +45,51 @@ def register(request):
             user = authenticate(username=email, password=password)
             login(request, user)
             return HttpResponseRedirect(reverse('index'))
-    context["registration_form"] = registration_form
+    context['registration_form'] = registration_form
     return render(request, 'registration.html', context)
 
 
 @login_required
 @cache_control(no_cache=True, must_revalidate=True, no_store=True, max_age=0)
 def search(request, task_id, template='serp.html'):
-    context = {"task_id":task_id}
+    context = {'task_id':task_id}
     user = request.user
     player = Player.objects.get(user=request.user)
     player_task = get_object_or_404(PlayerTask, id=task_id)
-    if "q" in request.GET:
-        query = unquote(request.GET["q"]).decode('utf8')
+    if 'q' in request.GET and request.GET['q'].strip() != '':
+        query = unquote(request.GET['q']).decode('utf8')
         search_proxy = SearchProxy(settings.SEARCH_PROXY)
-        context["query"] = query
+        context['query'] = query
         search_results = search_proxy.search(query)
-        context["serpid"] = search_results.id
+        context['serpid'] = search_results.id
         # Log query event
         serp = get_object_or_404(Serp, id=search_results.id)
         paginator = Paginator(search_results, settings.RESULTS_PER_PAGE)
         page = request.GET.get('page')
         try:
-            context["results"] = paginator.page(page)
+            context['results'] = paginator.page(page)
             page = int(page)
         except PageNotAnInteger:
-            context["results"] = paginator.page(1)
+            context['results'] = paginator.page(1)
             page = 1
         except EmptyPage:
-            context["results"] = paginator.page(paginator.num_pages)
+            context['results'] = paginator.page(paginator.num_pages)
             page = paginator.num_pages
         start_page = max([1, page - 3])
         end_page = min([paginator.num_pages + 1, page + 4])
-        context["page_numbers"] = range(start_page, end_page)
+        context['page_numbers'] = range(start_page, end_page)
         # Log query event
-        EventLogger.query(player_task, query, serp, context["results"].number)
-    context["enable_emu"] = settings.ENABLE_EMU_LOGGING
+        EventLogger.query(player_task, query, serp, context['results'].number)
+    context['enable_emu'] = settings.ENABLE_EMU_LOGGING
     return render(request, template, context)
 
 
 class GameView(View):
-    """
+    '''
         Top level page for the game. The pages shows game top panel and 
         search box in a frame. It also accepts answers and skips with POST
         requests.
-    """
+    '''
     is_game_over=False
     game_over_template = settings.GAME_OVER_TEMPLATE
 
@@ -128,7 +128,7 @@ class GameView(View):
             response = urllib2.urlopen(settings.MTURK_TASK_SUBMIT_URL +
                 urllib.urlencode(dict(
                     assignmentId=player_game.mturk_assignment_id,
-                    sb="submit HIT")))
+                    sb='submit HIT')))
         return HttpResponseRedirect(reverse('game_over',
             kwargs={'game_id':player_game.game.id}))
 
@@ -172,17 +172,17 @@ class GameView(View):
         assert current_task.finish == None
         
         # If form was submitted, either skipped or answered.
-        if request.method == "POST":
+        if request.method == 'POST':
             return self.post(request, player_game, current_task)
         else:
             return self.get(request, game, current_task)
 
 
     def post(self, request, player_game, current_task):
-        if request.POST.has_key("save_answer"):
+        if request.POST.has_key('save_answer'):
             current_task.answer = request.POST['answer']
             current_task.answer_url = request.POST['answer_url']
-        elif not request.POST.has_key("skip"):
+        elif not request.POST.has_key('skip'):
             raise Http404
         # Save the current task
         player_game.current_task_index += 1
@@ -194,7 +194,7 @@ class GameView(View):
             kwargs={'game_id':player_game.game.id}))
 
     def get(self, request, game, current_task):
-        context = { "game" : game, "player_task": current_task }
+        context = { 'game' : game, 'player_task': current_task }
         return render(request, 'game.html', context)
 
 

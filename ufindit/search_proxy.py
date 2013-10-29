@@ -34,26 +34,30 @@ class SearchResult:
     Represents one web search result
     """
     def __init__(self, url, display_url, title, snippet):
-        self.url = url
-        self.display_url = display_url
-        self.title = title
-        self.snippet = snippet
+        self._url = url
+        self._display_url = display_url
+        self._title = title
+        self._snippet = snippet
 
     @property
     def url(self):
-        return self.url
+        return self._url
+
+    @property
+    def quoted_url(self):
+        return urllib.quote(self._url.replace('/','\\'), '')
 
     @property
     def display_url(self):
-        return self.display_url
+        return self._display_url
 
     @property
     def title(self):
-        return self.title
+        return self._title
 
     @property
     def snippet(self):
-        return self.snippet
+        return self._snippet
 
     def __unicode__(self):
         return self.title + u'\n' + self.display_url + '\n' + self.snippet
