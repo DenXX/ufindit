@@ -38,8 +38,8 @@ urlpatterns = patterns('',
 
     # Proxy
     url(r'^(?P<task_id>[0-9]*)/http/(?P<url>.*)$', HttpProxy.as_view(
-        view_name='http_proxy', mode='playrecord', user_agent='Mozilla/5.0'),
-        name='http_proxy'),
+        view_name='http_proxy', mode='playrecord',
+        user_agent=settings.PROXY_USER_AGENT), name='http_proxy'),
     # Serp links
     url(r'^http/(?P<task_id>[0-9]*)/(?P<serp_id>[0-9]*)/(?P<url>.*)$', 
         'ufindit.views.http_proxy_decorator', name='http_proxy_decorator'),

@@ -44,8 +44,8 @@ class SearchResult:
         return self._url
 
     @property
-    def quoted_url(self):
-        return urllib.quote(self._url.replace('/','\\'), '')
+    def safe_url(self):
+        return self._url.replace('://','/')
 
     @property
     def display_url(self):

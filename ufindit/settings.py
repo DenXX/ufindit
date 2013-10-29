@@ -220,6 +220,7 @@ ENABLE_EMU_LOGGING = False
 
 # HTTP PROXY SETTINGS
 PROXY_REWRITE_RESPONSES = True
+PROXY_USER_AGENT = 'Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1667.0 Safari/537.36'
 
 EXTRA_RESPONSE_REWRITE_RULES = {
     '</body>':'<script type="text/javascript" src="/{task_id}/emu/emu.js"></script></body>',
