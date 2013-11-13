@@ -40,6 +40,8 @@ class Game(models.Model):
 class PlayerGame(models.Model):
     player = models.ForeignKey(Player)
     game = models.ForeignKey(Game)
+    rules_accepted = models.BooleanField(help_text=u'Did user watch the tutorial '
+        'and accepted the rules of this game')
     start = models.DateTimeField(auto_now_add=True,
         help_text=u'Start time of the game')
     last_activity = models.DateTimeField(auto_now=True,
@@ -51,6 +53,8 @@ class PlayerGame(models.Model):
         help_text=u'End time of the game')
     assignmentId = models.CharField(max_length=255, blank=True, null=True,
         help_text=u'AssignmentID if this game is played through MTurk')
+    score = models.PositiveIntegerField(default=0, help_text=u'User score in the '
+        'game, can be the number of correct answers or something different')
 
     def save(self, *args, **kwargs):
         created = not self.pk

@@ -1,25 +1,41 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block  title %}
     uFindIt - {{ player_task.task.text }}
 {% endblock %}
 
-{% block navbar_content %}
-<!-- <form class="navbar-form navbar-center"> -->
-<ul class="nav navbar-nav">
-    <li>
-        <a id="question" data-toggle="popover" href="#" class="navbar-text panel panel-success panel-body panel-sm" data-placement="bottom" style="margin-top:5px; margin-right:5px; padding:10px 10px 10px 10px" data-content="{{ player_task.task.text }}">
-            {{ player_task.task.text|truncatechars:70 }}
-        </a>
-    </li>
-</ul>
-
-<form class="navbar-form navbar-left" role="search" method="POST">
-  {% csrf_token %}
-  <button type="button" data-toggle="modal" data-target="#answerModal" class="btn btn-primary">Answer question</button>
-  <button type="submit" name="skip" class="btn btn-default">Skip</button>
-</form>
-<!-- </form> -->
+{% block navbar %}
+<div id="navbar" class="navbar navbar-default navbar-static-top">
+  <div class="container">
+    <div class="row" id="gamebar">
+      <a class="navbar-brand" href="#"><img src="{% static 'img/ufindit_logo_sm.png' %}" alt="Emory uFindIt game" /></a>
+      <div class="col-sm-7">
+          <textarea disabled rows="4" id="question" class="form-control panel panel-primary panel-body panel-sm">{{ player_task.task.text }}</textarea>
+      </div>
+      <div class="col-sm-1">
+          <form role="search" method="POST">
+            {% csrf_token %}
+            <div><button type="button" data-toggle="modal" data-target="#answerModal" class="btn btn-primary">Answer</button></div>
+            <div>&nbsp;</div>
+            <div><button type="submit" name="skip" class="btn btn-default btn-sm">Skip</button></div>
+          </form>
+      </div>
+      <div class="col-sm-2">
+        <div class="game-panel panel panel-success panel-body panel-sm">
+          Question {{ player_task.order|add:1 }} of {{ player_task.player_game.game.tasks.count }}<br />
+          Score: {{ player_task.player_game.score }}<br />
+          Time: {{ player_task.start|timesince }}
+        </div>
+      </div>
+      <div class="visible-lg col-sm=1">
+        <small class="text-muted">Welcome,<br />
+          {{ user.email }}<br />
+          <a href="{% url 'logout' %}">Sign out</a></small>
+      </div><!--/.navbar-collapse -->
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block content %}
@@ -51,6 +67,7 @@
   </div><!-- /.modal -->
 </form>
 
+{% if player_task.order == 0 %}
 {# Rules modal window #}
   <div class="modal fade" id="rulesModal" tabindex="-1" role="dialog" aria-labelledby="Rules" aria-hidden="true">
     <div class="modal-dialog">
@@ -99,21 +116,15 @@
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
+{% endif %}
 
-<iframe src="{% url 'search' task_id=player_task.id %}" height="100%" width="100%" frameBorder="0" class="searchiframe"></iframe>
+<iframe src="{% url 'search' task_id=player_task.id %}" class="searchiframe"></iframe>
 {% endblock %}
 
 {% block docend %}
 <script type="text/javascript" language="javascript"> 
 $(document).ready(function() {
-  $('.searchiframe').css('height', $(window).height() - 60 + 'px');
-  $("#question").popover({
-      animation:true,
-      html:true,
-      title:'<span class="text-info"><strong>Question:</strong></span>'+
-               '<button type="button" id="close" class="close" onclick="$(&quot;#question&quot;).popover(&quot;toggle&quot;);">&times;</button>'
-    });
-  $("#question").popover('show');
+  $('.searchiframe').css('height', $(window).height() - $('#navbar').height() - 10 + 'px');
   {% if player_task.order == 0 %}
   $("#rulesModal").modal("show");
   {% endif %}

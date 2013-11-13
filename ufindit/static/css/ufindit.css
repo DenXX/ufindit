@@ -1,9 +1,45 @@
 body {
   min-height: 100%;
-  padding-top: 50px;
+  height: 100%;
 }
 
-.navbar .nav
+#gamebar {
+    margin-top:5px;
+    margin-bottom:5px;    
+}
+
+#question {
+    margin:0px;
+    font-size:10pt;
+    resize:none; 
+    padding:5px;
+}
+
+.navbar-brand {
+    margin: 0px;
+    padding: 0px;
+}
+
+.navbarrow
 {
-    height: 50px;
+    height: 25px;
+}
+
+.navbar {
+    margin-bottom: 0px;
+}
+
+.searchiframe{
+    border: none;
+    padding: 0px;
+    margin: 0px;
+    height: 100%;
+    width: 100%;
+    vertical-align:bottom;
+}
+
+.game-panel {
+    margin: 0px;
+    padding: 5px;
+    height: 84px;
 }
