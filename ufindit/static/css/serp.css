@@ -20,3 +20,7 @@ ol.search-results li {
 .search-results-link {
     color: green;
 }
+
+.nopadding td {
+    padding: 2px;
+}

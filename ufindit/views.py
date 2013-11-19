@@ -1,4 +1,4 @@
-from datetime import datetime
+from django.utils.timezone import now
 from search_proxy import SearchProxy
 from urllib import unquote
 import urllib2
@@ -57,9 +57,12 @@ def search(request, task_id, template='serp.html'):
     player = Player.objects.get(user=request.user)
     player_task = get_object_or_404(PlayerTask, id=task_id)
     if 'q' in request.GET and request.GET['q'].strip() != '':
+        from nltk.tokenize.punkt import PunktWordTokenizer
+        tokenizer = PunktWordTokenizer()
         query = unquote(request.GET['q']).decode('utf8')
         search_proxy = SearchProxy(settings.SEARCH_PROXY)
         context['query'] = query
+        context['query_terms'] = tokenizer.tokenize(query)
         search_results = search_proxy.search(query)
         context['serpid'] = search_results.id
         # Log query event
@@ -122,7 +125,7 @@ class GameView(View):
 
     def finish_game(self, request, player_game):
         if not player_game.finish:
-            player_game.finish = datetime.now()
+            player_game.finish = now()
             player_game.save()
         if player_game.assignmentId:
             response = urllib2.urlopen(settings.MTURK_TASK_SUBMIT_URL +
@@ -166,7 +169,7 @@ class GameView(View):
         current_task = get_object_or_404(PlayerTask, player_game=player_game,
             order=player_game.current_task_index)
         if current_task.start == None:
-            current_task.start = datetime.now()
+            current_task.start = now()
             current_task.save()
         # Check if the task wasn't finished
         assert current_task.finish == None
@@ -187,14 +190,14 @@ class GameView(View):
         # Save the current task
         player_game.current_task_index += 1
         player_game.save()
-        current_task.finish = datetime.now()
+        current_task.finish = now()
         current_task.save()
         # Redirect back so that refresh doesn't cause form resend.
         return HttpResponseRedirect(reverse('game',
             kwargs={'game_id':player_game.game.id}))
 
     def get(self, request, game, current_task):
-        context = { 'game' : game, 'player_task': current_task }
+        context = { 'game' : game, 'player_task': current_task}
         return render(request, 'game.html', context)
 
 
