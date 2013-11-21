@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from ufindit.logger import EventLogger
 from ufindit.models import Player, PlayerTask, Serp, Game, PlayerGame
-from querydifficulty.models import QueryDifficulty, Survey, QueryUrlProblem
+from querydifficulty.models import QueryUrlProblem, QueryDifficulty, Survey
 
 @csrf_exempt
 def submit_query_difficulty(request, task_id):
@@ -39,7 +39,7 @@ def submit_url_problem(request, task_id):
     assert request.method == "POST"
     player_task = get_object_or_404(PlayerTask, id=task_id)
     serp = get_object_or_404(Serp, id=request.POST["serpid"])
-    rank = int(request.POST['rank'])
+    rank = int(request.POST['rank'])-1 # Because page uses 1-based ranks
     missing_terms = ''
     misinterpreted_terms = ''
     missing_relation_terms = ''

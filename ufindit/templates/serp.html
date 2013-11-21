@@ -24,8 +24,8 @@ uFindIt
             {% if not results %}
                 No results found for <strong>{{ query }}</strong>.
             {% else %}
-                <ol class="search-results" start="{{ results.start_index }}">
                 {% block results %}
+                  <ol class="search-results" start="{{ results.start_index }}">
                     {% for result in results %}
                     <li>
                         <div class="nospace"><h3 class="nospace"><a href="{% url 'http_proxy_decorator' task_id=task_id serp_id=serpid url=result.safe_url %}" class="nospace">{{ result.title|safe }}</a></h3></div>
@@ -33,8 +33,8 @@ uFindIt
                         <p>{{ result.snippet|safe }}</p>
                     </li>
                     {% endfor %}
+                  </ol>
                 {% endblock %}
-                </ol>
 
                 {# Pagination : BEGIN #}
                 {% block pager %}

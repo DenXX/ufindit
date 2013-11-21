@@ -12,18 +12,34 @@
 {% endblock %}
 
 {% block results %}
+  {% if results|length > 1 %}
+    <div class="alert alert-danger">
+      <strong>ERROR!</strong>
+      Query difficulty project works only if RESULTS_PER_PAGE=1
+    </div>
+  {% else %}
+  <ol class="search-results" start="{{ results.start_index }}">
+    {% for result in results %}
+    <li>
+        <div class="nospace"><h3 class="nospace"><a href="{% url 'http_proxy_decorator' task_id=task_id serp_id=serpid url=result.safe_url %}" class="nospace">{{ result.title|safe }}</a></h3></div>
+        <div class="nospace"><cite class="search-results-link">{{ result.display_url|safe }}</cite></div>
+        <p>{{ result.snippet|safe }}</p>
+    </li>
+  </ol>
+  {% endfor %}
+  {% endif %}
+{% endblock %}
+
+{% block pager %}
+  {# URL problem panel : BEGIN #}
   <form method="POST" id="queryUrlProblemForm">
-  {% for result in results %}
-  <input type="hidden" name="serpid" value="{{ serpid }}">
-  <input type="hidden" name="rank" value="{{ forloop.counter0|add:results.start_index }}" />
-  <li>
-      <div class="nospace"><h3 class="nospace"><a href="{% url 'http_proxy_decorator' task_id=task_id serp_id=serpid url=result.safe_url %}" class="nospace">{{ result.title|safe }}</a></h3></div>
-      <div class="nospace"><cite class="search-results-link">{{ result.display_url|safe }}</cite></div>
-      <p>{{ result.snippet|safe }}</p>
-
-      <div id="fillFormAlert" class="alert alert-danger hide">If you don't like this result please specify why...</div>
-
-      <table class="table table-bordered" style="width: auto; text-align: center;">
+    <input type="hidden" name="serpid" value="{{ serpid }}">
+    <input type="hidden" name="rank" value="{{ results.start_index }}" />
+    <small>
+    <div class="panel panel-default">
+      <div class="panel-heading">Don't like this result? Why?</div>
+       
+      <table class="table" style="width: auto; text-align: center;">
       <tr><th style="padding: 4px">&nbsp;</th>
         {% for term in query_terms %}<th style="padding: 4px">{{ term }}</th> {% endfor %}
       </tr>
@@ -52,42 +68,17 @@
         {% endfor %}
       </tr>
       </table>
-      <div class="form-group">
+
+      <div class="panel-body form-group">
         <label class="sr-only" for="extra">Other problem</label>
         <input type="text" class="form-control" name="extra" id="extra" placeholder="Other problem?">
       </div>
-      <hr />
-  </li>
+    </div>
+  </small>
   </form>
-  {% endfor %}
-{% endblock %}
-
-{% block pager %}
-  <ul class="pagination pagination-sm" id="serp_pager">
-      <li {% if not results.has_previous %}class="disabled"{% endif %}>
-          <a class="pager_button" href="{% if results.has_previous %}?q={{query}}&page={{ results.previous_page_number }}{% else %}#{% endif %}">&laquo;</a>
-      </li>
-      
-      {# Display ... if we don't see last page #}
-      {% if page_numbers|first != 1 %}
-      <li class="disabled"><a>...</a></li>
-      {% endif %}
-
-      {% for page in page_numbers %}
-      <li {% ifequal page results.number %}class="active"{% endifequal %}>
-          <a class="pager_button" href="?q={{query}}&page={{ page }}">{{ page }}</a>
-      </li>
-      {% endfor %}
-
-      {# Display ... if we don't see last page #}
-      {% if page_numbers|last != results.paginator.num_pages %}
-      <li class="disabled"><a>...</a></li>
-      {% endif %}
-
-      <li {% if not results.has_next %}class="disabled"{% endif %}>
-          <a class="pager_button" href="{% if results.has_next %}?q={{query}}&page={{ results.next_page_number }}{% else %}#{% endif %}">&raquo;</a>
-      </li>
-  </ul>
+  {# URL problem panel : END #}
+  <div id="fillFormAlert" class="alert alert-danger hide">If you don't like this result please specify why...</div>
+  <a class="btn btn-sm btn-info pager_button" href="{% if results.has_next %}?q={{query}}&page={{ results.next_page_number }}{% else %}#{% endif %}">Next result &raquo;</a>
 {% endblock %}
 
 {% block extracode %}
@@ -225,8 +216,12 @@
             return false;
           }
           else {
-            $.post("{% url 'querydifficulty:submit_url_problem' task_id=task_id %}",
-              $('#queryUrlProblemForm').serialize());
+              $.ajax({
+                type: "POST",
+                url: "{% url 'querydifficulty:submit_url_problem' task_id=task_id %}",
+                data: $('#queryUrlProblemForm').serialize(),
+                async: false
+              });
           }
         });
 
