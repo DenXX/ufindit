@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from ufindit.logger import EventLogger
 from ufindit.models import Player, PlayerTask, Serp, Game, PlayerGame
-from querydifficulty.models import QueryDifficulty, Survey
+from querydifficulty.models import QueryDifficulty, Survey, QueryUrlProblem
 
 @csrf_exempt
 def submit_query_difficulty(request, task_id):
@@ -29,6 +29,34 @@ def submit_query_difficulty(request, task_id):
         difficulty=difficulty).save()
     return HttpResponse("ok")
 
+
+@csrf_exempt
+def submit_url_problem(request, task_id):
+    """
+        This method accepts POST requests from query url problem form and 
+        saves answers to the database.
+    """
+    assert request.method == "POST"
+    player_task = get_object_or_404(PlayerTask, id=task_id)
+    serp = get_object_or_404(Serp, id=request.POST["serpid"])
+    rank = int(request.POST['rank'])
+    missing_terms = ''
+    misinterpreted_terms = ''
+    missing_relation_terms = ''
+    extra = ''
+    print request.POST
+    if 'missing[]' in request.POST:
+        missing_terms = ','.join(request.POST.getlist('missing[]'))
+    if 'misinterpreted[]' in request.POST:
+        misinterpreted_terms = ','.join(request.POST.getlist('misinterpreted[]'))
+    if 'missing_relation[]' in request.POST:
+        missing_relation_terms = ','.join(request.POST.getlist('missing_relation[]'))
+    if 'extra' in request.POST:
+        extra = request.POST['extra']
+    QueryUrlProblem(player_task=player_task, serp=serp, doc_rank=rank, missing_terms=missing_terms,
+        misinterpreted_terms=misinterpreted_terms, missing_relations=missing_relation_terms,
+        extra=extra).save()
+    return HttpResponse("ok")
 
 @login_required
 def submit_survey_view(request, game_id):

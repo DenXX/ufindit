@@ -12,6 +12,8 @@ urlpatterns = patterns('',
     url(r'(?P<task_id>[0-9]+)$',
         'querydifficulty.views.submit_query_difficulty',
         name='submit_query_difficulty'),
+    url(r'(?P<task_id>[0-9]+)/u$',
+        'querydifficulty.views.submit_url_problem', name='submit_url_problem'),
     url(r'(?P<game_id>[0-9]+)/survey$', 'querydifficulty.views.submit_survey_view',
         name='submit_survey_view'),
 )

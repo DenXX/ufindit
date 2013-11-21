@@ -37,7 +37,8 @@ uFindIt
                 </ol>
 
                 {# Pagination : BEGIN #}
-                <ul class="pagination pagination-sm">
+                {% block pager %}
+                <ul class="pagination pagination-sm" id="serp_pager">
                     <li {% if not results.has_previous %}class="disabled"{% endif %}>
                         <a href="{% if results.has_previous %}?q={{query}}&page={{ results.previous_page_number }}{% else %}#{% endif %}">&laquo;</a>
                     </li>
@@ -62,6 +63,7 @@ uFindIt
                         <a href="{% if results.has_next %}?q={{query}}&page={{ results.next_page_number }}{% else %}#{% endif %}">&raquo;</a>
                     </li>
                 </ul>
+                {% endblock %}
                 {# Pagination : END #}
 
             {% endif %}
