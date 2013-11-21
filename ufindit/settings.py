@@ -20,7 +20,7 @@ DATABASES = {
         'HOST':     '',                                     # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT':     '',                                     # Set to empty string for default.
     }
-    if not DEBUG else {
+    if DEBUG else {
         'ENGINE':   'django.db.backends.postgresql_psycopg2',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME':     'ufindit',                                  # Or path to database file if using sqlite3.
         'USER':     'ufindit',
@@ -192,7 +192,8 @@ EMAIL_USE_TLS = True
 # Application specific settings : BEGIN
 
 SEARCH_PROXY = "bing"
-RESULTS_PER_PAGE = 10
+RESULTS_PER_PAGE = 1
+RANDOMIZE_SEARCH_RESULTS = True
 
 # Which SERP template to use, we can add extra html code by switching templates.
 SERP_TEMPLATE_NAME = 'query_difficulty_serp.html'

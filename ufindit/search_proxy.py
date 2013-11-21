@@ -1,17 +1,18 @@
 """
     This module implements search providers returning a set of search
     results for a query. You can create an instance of SearchProxy
-    object passing the name of search to use and call its search(query)
+    object passing the name of search to use and call its search(player, query)
     method to get search results.
 
     Author: Denis Savenkov (dsavenk@emory.edu)
-    Date: 11/9/2013
+    Date: 9/11/2013
 
 """
 
 
 import settings
 from django.core.cache import get_cache
+from django.core.exceptions import ObjectDoesNotExist
 from abc import abstractmethod
 
 import pickle
@@ -20,7 +21,7 @@ import re
 import urllib
 import urllib2
 
-from ufindit.models import Serp
+from ufindit.models import Serp, UserSerpResultsOrder
 
 # Python 2.6 has json built in, 2.5 needs simplejson
 try:
@@ -31,7 +32,7 @@ except ImportError:
 
 class SearchResult:
     """
-    Represents one web search result
+        Represents one web search result
     """
     def __init__(self, url, display_url, title, snippet):
         self._url = url
@@ -107,7 +108,7 @@ class SearchProvider:
     Abstract class for all search providers.
     """
     @abstractmethod
-    def search(self, query):
+    def search(self, player, query):
         return None
 
     @abstractmethod
@@ -117,7 +118,7 @@ class SearchProvider:
 
 class BingSearchProvider(SearchProvider):
     """
-    Extracts search results from Bing search engine. Is used inside SearchProxy.
+        Extracts search results from Bing search engine. Is used inside SearchProxy.
     """
     _api_url_template="https://api.datamarket.azure.com/Bing/Search/Web?"
     _params={"$format":"json",
@@ -125,7 +126,7 @@ class BingSearchProvider(SearchProvider):
     def __init__(self, bing_api_key=settings.BING_API_KEY):
         self._api_key = bing_api_key
 
-    def search(self, query, verbose=False):
+    def search(self, player, query, verbose=False):
         BingSearchProvider._params["Query"] = "'" + query + "'"
         url = BingSearchProvider._api_url_template + \
             urllib.urlencode(BingSearchProvider._params)
@@ -169,15 +170,17 @@ class CacheSearchProvider(SearchProvider):
         assert isinstance(search_provider, SearchProvider)
         self._search_provider = search_provider
 
-    def search(self, query, verbose=False):
+    def search(self, player, query, verbose=False):
         """
         Checks cache for search results and calls underlining provider if fails.
         """
+
+        # TODO: not good, that I use name of the underlying provider as engine
         results = Serp.objects.filter(query=query, engine=self._search_provider)
         if len(results) == 0:
             if verbose:
                 print "Search cache miss"
-            results = self._search_provider.search(query)
+            results = self._search_provider.search(player, query)
             serp = Serp(query=query, engine=self._search_provider,
                 results=pickle.dumps(results))
             serp.save()
@@ -192,6 +195,41 @@ class CacheSearchProvider(SearchProvider):
 
     def __unicode__(self):
         return u'Cache'
+
+
+class RandomizationSearchProvider(SearchProvider):
+    """
+    Randomizes search results for the given query
+    """
+    def __init__(self, search_provider):
+        if not isinstance(search_provider, CacheSearchProvider):
+            raise ValueError('Randomization can only be used on top of caching')
+        self._search_provider = search_provider
+
+    def search(self, player, query, verbose=False):
+        results = self._search_provider.search(player, query)
+        serp = Serp.objects.get(id = results.id)
+        try:
+            results_order = UserSerpResultsOrder.objects.get(player=player, serp=serp)
+            order = map(int, results_order.order.split(','))
+        except ObjectDoesNotExist:
+            from random import shuffle
+            order = range(len(results))
+            shuffle(order)
+            results_order = UserSerpResultsOrder(player=player, serp=serp,
+                order=",".join(map(str, order)))
+            results_order.save()
+        results.results = self._shuffle_results(results.results, order)
+        return results
+
+    def _shuffle_results(self, results, order):
+        res = [None, ] * len(results)
+        for index, rank in enumerate(order):
+            res[index] = results[rank]
+        return res
+
+    def __unicode__(self):
+        return u'Randomization'
 
 
 class SearchProxy(SearchProvider):
@@ -216,7 +254,10 @@ class SearchProxy(SearchProvider):
         if engine not in SearchProxy._engines:
             raise KeyError("No such engine found: " + engine)
         # Use caching
-        return CacheSearchProvider(SearchProxy._engines[engine]())
+        provider = CacheSearchProvider(SearchProxy._engines[engine]())
+        # Use randomization if setting is on
+        if settings.RANDOMIZE_SEARCH_RESULTS:
+            return RandomizationSearchProvider(provider)
 
     def _normalize_query(self, query):
         """
@@ -224,12 +265,12 @@ class SearchProxy(SearchProvider):
         """
         return re.sub('\s+', ' ', query).strip().lower()
 
-    def search(self, query):
+    def search(self, player, query):
         """
         Returns search results for the given query. Uses search engine specified
         when object was created.
         """
-        return self._search_provider.search(self._normalize_query(query))
+        return self._search_provider.search(player, self._normalize_query(query))
 
     def __unicode__(self):
         return "Proxy"

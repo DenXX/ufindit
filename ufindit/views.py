@@ -63,7 +63,7 @@ def search(request, task_id, template='serp.html'):
         search_proxy = SearchProxy(settings.SEARCH_PROXY)
         context['query'] = query
         context['query_terms'] = tokenizer.tokenize(query)
-        search_results = search_proxy.search(query)
+        search_results = search_proxy.search(player, query)
         context['serpid'] = search_results.id
         # Log query event
         serp = get_object_or_404(Serp, id=search_results.id)

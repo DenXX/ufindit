@@ -120,6 +120,19 @@ class Serp(models.Model):
         unique_together = ("query", "engine")
 
 
+class UserSerpResultsOrder(models.Model):
+    """
+    Stores order of search results shown if used randomization
+    """
+    serp = models.ForeignKey(Serp, help_text=u'Serp results page')
+    player = models.ForeignKey(Player, help_text=u'User profile')
+    order = models.CommaSeparatedIntegerField(blank=True, null=True,
+        max_length=512, db_index=True, help_text=u'The order of results to show')
+
+    class Meta:
+        unique_together = ("serp", "player")
+
+
 class Event(models.Model):
     player_task = models.ForeignKey(PlayerTask)
     event = models.CharField(max_length=10, db_index=True, help_text=u'Type of '
@@ -129,7 +142,7 @@ class Event(models.Model):
     query = models.CharField(max_length=1024, blank=True, null=True,
         help_text=u'Query text if the event is query')
     serp = models.ForeignKey(Serp, blank=True, null=True, help_text=u'SERP')
-    page = models.PositiveIntegerField(blank=True, null=True, 
+    page = models.PositiveSmallIntegerField(blank=True, null=True, 
         help_text=u'The index of the current page')
     url = models.URLField(blank=True, null=True, help_text=u'Clicked url')
     extra_data = models.TextField(blank=True, null=True,
