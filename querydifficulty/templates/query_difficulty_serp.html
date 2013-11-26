@@ -18,14 +18,20 @@
       Query difficulty project works only if RESULTS_PER_PAGE=1
     </div>
   {% else %}
-  <ol class="search-results" start="{{ results.start_index }}">
-    {% for result in results %}
-    <li>
-        <div class="nospace"><h3 class="nospace"><a href="{% url 'http_proxy_decorator' task_id=task_id serp_id=serpid url=result.safe_url %}" class="nospace">{{ result.title|safe }}</a></h3></div>
-        <div class="nospace"><cite class="search-results-link">{{ result.display_url|safe }}</cite></div>
-        <p>{{ result.snippet|safe }}</p>
-    </li>
-  </ol>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <ol class="search-results" start="{{ results.start_index }}">
+          {% for result in results %}
+          <li>
+              <div class="nospace"><h3 class="nospace"><a href="{% url 'http_proxy_decorator' task_id=task_id serp_id=serpid url=result.safe_url %}" class="nospace">{{ result.title|safe }}</a></h3></div>
+              <div class="nospace"><cite class="search-results-link">{{ result.display_url|safe }}</cite></div>
+              <p>{{ result.snippet|safe }}</p>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
   {% endfor %}
   {% endif %}
 {% endblock %}
@@ -100,50 +106,20 @@
               <div class="controls">
                 <div class="checkbox">
                   <label for="query_difficulty-0">
-                    <input type="checkbox" name="query_difficulty" id="query_difficulty-0" value="There are documents relevant to the query, but I can get better results by rephrasing my query.">
-                      <strong>There are documents relevant</strong> to the query, but I can get better results by rephrasing my query.
+                    <input type="checkbox" name="query_difficulty" id="query_difficulty-0" value="Documents are about the topic of interest, but don't contain the answer to the question.">
+                      Documents are about the topic of interest, but don't contain the answer to the question.
                   </label>
                 </div>
                 <div class="checkbox">
                   <label for="query_difficulty-1">
                     <input type="checkbox" name="query_difficulty" id="query_difficulty-1" value="Documents are missing main topic of the query">
-                      Documents <strong>missed</strong> the main topic of the query.
+                      Some documents are about the topic of interest, but don't contain the answer to the question.
                   </label>
                 </div>
                 <div class="checkbox">
                   <label for="query_difficulty-6">
                     <input type="checkbox" name="query_difficulty" id="query_difficulty-6" value="Documents are about different interpretation of the main topic of the query.">
-                      Documents are about <strong>different interpretation</strong> of the main topic of the query.
-                  </label>
-                </div>
-                <div class="checkbox">
-                  <label for="query_difficulty-2">
-                    <input type="checkbox" name="query_difficulty" id="query_difficulty-2" value="Documents are missing some aspect (some characteristic of interest) of the main topic of the query.">
-                      Documents are missing some <strong>aspect</strong> (some characteristic of interest) of the main topic of the query.
-                  </label>
-                 </div>
-                <div class="checkbox">
-                  <label for="query_difficulty-3">
-                    <input type="checkbox" name="query_difficulty" id="query_difficulty-3" value="This is a complex query asking about several things and documents missed one of the topics.">
-                      This is a complex query asking about several things and documents <strong>missed</strong> one of the topics.
-                  </label>
-                </div>
-                <div class="checkbox">
-                  <label for="query_difficulty-7">
-                    <input type="checkbox" name="query_difficulty" id="query_difficulty-7" value="This is a complex query asking about several things, but documents are about different interpretation of one of the topics.">
-                      This is a complex query asking about several things, but documents are about <strong>different interpretation</strong> of one of the topics.
-                  </label>
-                </div>
-                <div class="checkbox">
-                  <label for="query_difficulty-4">
-                    <input type="checkbox" name="query_difficulty" id="query_difficulty-4" value="This is a complex query asking about several things and documents missed aspect (some characteristic of interest) of one of the topics.">
-                      This is a complex query asking about several things and documents missed <strong>aspect</strong> (some characteristic of interest) of one of the topics.
-                  </label>
-                </div>
-                <div class="checkbox">
-                  <label for="query_difficulty-5">
-                    <input type="checkbox" name="query_difficulty" id="query_difficulty-5" value="This is a complex query asking about several things and relationship between topics are missing.">
-                      This is a complex query asking about several things and <strong>relationship</strong> between topics are missing.
+                      There are no documents about the main topic of the query.
                   </label>
                 </div>
                 <br />

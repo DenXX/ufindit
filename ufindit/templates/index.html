@@ -26,7 +26,7 @@
                     <tr><td>{{ game.name }}</td><td>
                         &nbsp;&nbsp;&nbsp;
                         {% if user.is_authenticated %}
-                            <a class="btn btn-success" href="{% url 'game' game_id=game.id %}">Play</a>
+                            <a class="btn btn-success" href="{% url 'rules' game_id=game.id %}">Play</a>
                             {% if user.is_staff %}
                                 {% if game.hitId %}
                                     <span class="badge">HitID: {{ game.hitId }}</span>

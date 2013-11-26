@@ -5,13 +5,15 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 from httpproxy.views import HttpProxy
 
-from ufindit.views import GameView
+from ufindit.views import GameView, RulesView
 
 admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', 'ufindit.views.index', name='index'),
     url(r'^game/(?P<game_id>[0-9]+)/$', GameView.as_view(), name='game'),
+    url(r'^game/(?P<game_id>[0-9]+)/rules$', RulesView.as_view(
+        template_name='rules.html'), name='rules'),
     url(r'^game/(?P<game_id>[0-9]+)/over$', GameView.as_view(is_game_over=True),
         name='game_over'),
 

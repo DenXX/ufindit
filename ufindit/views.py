@@ -62,7 +62,7 @@ def search(request, task_id, template='serp.html'):
         query = unquote(request.GET['q']).decode('utf8')
         search_proxy = SearchProxy(settings.SEARCH_PROXY)
         context['query'] = query
-        context['query_terms'] = tokenizer.tokenize(query)
+        context['query_terms'] = [term for term in tokenizer.tokenize(query) if len(term) > 1 or term.isalpha()]
         search_results = search_proxy.search(player, query)
         context['serpid'] = search_results.id
         # Log query event
@@ -151,7 +151,9 @@ class GameView(View):
         player, _ = Player.objects.get_or_create(user=request.user)
         player_game, created = PlayerGame.objects.get_or_create(player=player,
             game=game)
-
+        # If player opens the game, then he accepted the rules
+        player_game.rules_accepted = True
+        player_game.save()
         if self.is_game_over:
             if not player_game.finish:
                 raise Http404()
@@ -185,6 +187,9 @@ class GameView(View):
         if request.POST.has_key('save_answer'):
             current_task.answer = request.POST['answer']
             current_task.answer_url = request.POST['answer_url']
+            # Increment user score
+            player_game.score += 1
+            player_game.save()
         elif not request.POST.has_key('skip'):
             raise Http404
         # Save the current task
@@ -207,3 +212,18 @@ def http_proxy_decorator(request, task_id, serp_id, url):
     EventLogger.click(player_task, url, serp=serp)
     return HttpResponseRedirect(reverse('http_proxy', kwargs={'url':url,
         'task_id':task_id}))
+
+class RulesView(View):
+    """ Checks if user accepted rules and if not, shows  """
+    
+    template_name = 'rules.html'
+
+    def get(self, request, game_id):
+        game = get_object_or_404(Game, id=game_id, active=True)
+        player, _ = Player.objects.get_or_create(user=request.user)
+        player_game, created = PlayerGame.objects.get_or_create(player=player,
+            game=game)
+        if player_game.rules_accepted:
+            return HttpResponseRedirect(reverse('game',
+                kwargs={'game_id': game_id}))
+        return render(request, self.template_name, {'game_id' : game_id})
