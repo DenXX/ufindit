@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <h2>Rules <small>Please read carefully</small></h2>
+  <hr />
+
+  <div class="row"><div class="col-md-8">
+  <p>You will need to find answers to several questions by <strong>searching the web</strong> using <strong>our provided search interface</strong>.
+  In this contest you will need to use your best search skills, general knowledge, and quick thinking.
+  <strong>We hope this contest is fun, and challenges you to use search creatively!</strong></p>
+
+  <!--<strong>The best players (who submit correct answers to the most questions, following the rules below) 
+  will receive a small $5 gift certificate as a prize. 
+  You would have to provide a valid email address to receive the certificate code.</p>-->
+
+  <p>There will be several questions. The maximum time allotted to answer each question is 10 minutes. 
+
+  You should <b>only search</b> using <b>our search interface</b> and <b>only browse</b>
+  pages through <b>our interface</b>. <b>Do NOT</b> use your browser "location" bar, search toolbar, or search engine opened 
+  in a new browser window as the resulting URLs will not be captured and <b>disqualify your answers</b>.</p>
+
+  <p><b>Finally, your browser must support cookies.</b></p>
+
+  <ul>
+  <li>An <b>answer</b> is considered <b>CORRECT</b> if there is a web page containing your answer and you have find an answer using our search proxy.</li>
+
+  <li>An <b>answer</b> is considered <b>INCORRECT</b> if:
+
+    <ul>
+     <li>The answer is too vague or does not address the question directly</li>
+     <li>The answer was not found through our search interface (logs will be checked to confirm that our interface was used).</li>
+    </ul>
+  </ul>
+
+  <p>We reserve the right to award one, all, or none of the players, depending on the quality of the submissions. </p>
+  <hr />
+  <a href="{% url 'querydifficulty:rules1' game_id=game_id %}" class="btn btn-default">Next</a>
+</div></div></div>
+{% endblock %}

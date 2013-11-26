@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<div class="container">
+  <h2>Rules <small>Please read carefully</small></h2>
+  <hr />
+  <img src="{% static 'img/page2.png' %}" />
+  <hr />
+  <h3>Possible problems with a search document</h3>
+  <table class="table">
+    <tr>
+        <td><strong>Missing topic</strong></td>
+        <td>If information on some topic from the query is missing, check the corresponding checkbox. For example: if for query "Neiblemeister wife" a document doesn't talk about wife, you should check the corresponding checkbox.</td>
+    </tr>
+    <tr>
+        <td><strong>Misinterpreted keywords</strong></td>
+        <td>If a document describes something that is a different interpretation of a term you used, check the corresponding checkbox. For example, if for query "Neiblemeister wife" a document talks about different person with the same name and his wife you should check Neiblemeister as misinterpreted.</td>
+    </tr>
+    <tr>
+        <td><strong>Missing relation between topics</strong></td>
+        <td>If document have some information about topics from the query, but the connection between topics are missing, then you should check 2 or more checkboxes in this row for topics connection between which is missing. For example, if for query "Neiblemeister wife" a document has some information about the correct Neiblemeister and in some other contex about someone else wife, then the connection between topics is not captured and you should select checkboxes for the both topics. In the document shown above this is exactly the case, so we should check both checkboxes in the last row.</td>
+    </tr>
+    <tr>
+        <td><strong>Other problem</strong></td>
+        <td>If you think that neither or above reasons apply but document doesn't answer the question and you didn't like it, please specify why.</td>
+    </tr>
+
+  </table>
+  <hr />
+  <a href="{% url 'querydifficulty:rules1' game_id=game_id %}" class="btn btn-default">Previous</a>&nbsp;&nbsp;
+  <a href="{% url 'querydifficulty:rules3' game_id=game_id %}" class="btn btn-default">Next</a>
+</div></div></div>
+{% endblock %}

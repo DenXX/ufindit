@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<div class="container">
+  <h2>Rules <small>Please read carefully</small></h2>
+  <hr />
+
+  <img src="{% static 'img/page4.png' %}" />
+  <hr />
+  <a href="{% url 'querydifficulty:rules3' game_id=game_id %}" class="btn btn-default">Previous</a>&nbsp;&nbsp;
+  <a href="{% url 'querydifficulty:rules5' game_id=game_id %}" class="btn btn-default">Next</a>
+</div></div></div>
+{% endblock %}

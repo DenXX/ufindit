@@ -5,6 +5,8 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 from httpproxy.views import HttpProxy
 
+from ufindit.views import RulesView
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -16,4 +18,18 @@ urlpatterns = patterns('',
         'querydifficulty.views.submit_url_problem', name='submit_url_problem'),
     url(r'(?P<game_id>[0-9]+)/survey$', 'querydifficulty.views.submit_survey_view',
         name='submit_survey_view'),
+
+    # TODO: Ugly, but works
+    url(r'^game/(?P<game_id>[0-9]+)/rules/1/$', RulesView.as_view(
+        template_name='rules1.html'), name='rules1'),
+    url(r'^game/(?P<game_id>[0-9]+)/rules/2/$', RulesView.as_view(
+        template_name='rules2.html'), name='rules2'),
+    url(r'^game/(?P<game_id>[0-9]+)/rules/3/$', RulesView.as_view(
+        template_name='rules3.html'), name='rules3'),
+    url(r'^game/(?P<game_id>[0-9]+)/rules/4/$', RulesView.as_view(
+        template_name='rules4.html'), name='rules4'),
+    url(r'^game/(?P<game_id>[0-9]+)/rules/5/$', RulesView.as_view(
+        template_name='rules5.html'), name='rules5'),
+    url(r'^game/(?P<game_id>[0-9]+)/rules/6/$', RulesView.as_view(
+        template_name='rules6.html'), name='rules6'),
 )
