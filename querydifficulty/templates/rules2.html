@@ -33,8 +33,27 @@
 
   </table>
   <hr />
+  <div class="checkbox">
+    <label>
+      <input type="checkbox" id="read"> I have read and agree to the rules of the game
+    </label>
+  </div>
+  <br />
   <a href="{% url 'querydifficulty:rules1' game_id=game_id %}" class="btn btn-default">Previous</a>&nbsp;&nbsp;
-  <a href="{% url 'querydifficulty:rules3' game_id=game_id %}" class="btn btn-default">Next</a>
+  <a href="{% url 'querydifficulty:rules3' game_id=game_id %}" class="btn btn-default" id="nextBtn" disabled>Next</a>
 </div></div></div>
 <br />
+{% endblock %}
+
+{% block docend %}
+<script language="javascript">
+  $(document).ready(function() {
+    $('#read').click(function() {
+      if (this.checked)
+        $('#nextBtn').removeAttr('disabled');
+      else
+        $('#nextBtn').attr('disabled', true);
+    });
+  });
+</script>
 {% endblock %}
