@@ -3,12 +3,15 @@
 
 {% block content %}
 <div class="container">
-  <h2>Rules <small>Please read carefully</small></h2>
+  <h2>Answering question <small>Please read carefully</small></h2>
+
+You can submit the answer by clicking the Answer button and entering it in the dialog that will appear. If no matter how you try you cannot find the answer, you can skip the question. Note, that <strong>we will evaluate the &quot;effort&quot;</strong> before approving your game for payment.
+
   <hr />
 
   <img src="{% static 'img/page6.png' %}" />
   <hr />
   <a href="{% url 'querydifficulty:rules5' game_id=game_id %}" class="btn btn-default">Previous</a>&nbsp;&nbsp;
-  <a href="{% url 'game' game_id=game_id %}" class="btn btn-success">Accept rules and start the game</a>
+  <a href="{% url 'game' game_id=game_id %}" class="btn btn-success">I accept the rules</a>
 </div></div></div>
 {% endblock %}

@@ -3,11 +3,16 @@
 
 {% block content %}
 <div class="container">
-  <h2>Rules <small>Please read carefully</small></h2>
+  <h2>Search quality questions <small>Please read carefully</small></h2>
+
+  Search interface allows you to examine results one by one. You can click on the result to see the page (you can also right click to open it in a new tab). <strong>Do not</strong> copy url and paste it to a new tab as we need you to use our proxy to browse results.To go back to search you can click browser Back button.
+ <br />
+  If a search results doesn't give you an answer or you are not satisfied with it for some other reason you will <strong>have to</strong> tell us why by filling the form. We will only approve your game if you provided feedback on search results quality!
+
   <hr />
   <img src="{% static 'img/page2.png' %}" />
   <hr />
-  <h3>Possible problems with a search document</h3>
+  <h3>Possible problems with a search result</h3>
   <table class="table">
     <tr>
         <td><strong>Missing topic</strong></td>
@@ -31,4 +36,5 @@
   <a href="{% url 'querydifficulty:rules1' game_id=game_id %}" class="btn btn-default">Previous</a>&nbsp;&nbsp;
   <a href="{% url 'querydifficulty:rules3' game_id=game_id %}" class="btn btn-default">Next</a>
 </div></div></div>
+<br />
 {% endblock %}

@@ -22,7 +22,7 @@
           </form>
       </div>
       <div class="col-sm-2">
-        <div class="game-panel panel panel-success panel-body panel-sm" style="vertical-align: middle;">
+        <div class="game-panel text-success" style="vertical-align: middle;">
           Question {{ player_task.order|add:1 }} of {{ player_task.player_game.game.tasks.count }}<br />
           Score: {{ player_task.player_game.score }}<br />
         </div>
@@ -45,7 +45,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title">Answer question</h4>
+          <h4 class="modal-title">Answer the Question</h4>
         </div>
         <div class="modal-body">
             <div class="panel panel-success">

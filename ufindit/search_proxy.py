@@ -215,7 +215,11 @@ class RandomizationSearchProvider(SearchProvider):
         except ObjectDoesNotExist:
             from random import shuffle
             order = range(len(results))
-            shuffle(order)
+            # We shuffle only top 10 results
+            order1 = order[:10]
+            order2 = order[10:]
+            shuffle(order1)
+            order = order1 + order2
             results_order = UserSerpResultsOrder(player=player, serp=serp,
                 order=",".join(map(str, order)))
             results_order.save()
