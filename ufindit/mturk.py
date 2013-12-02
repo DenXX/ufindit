@@ -42,11 +42,15 @@ class MTurkProxy:
         print self.mturk_connection.get_account_balance()
 
         quals = Qualifications()
-        quals.add(
-            PercentAssignmentsApprovedRequirement("GreaterThanOrEqualTo",
-                settings.MTURK_APPROVED_PERCENT_REQUIREMENT))
+        if settings.MTURK_APPROVED_PERCENT_REQUIREMENT > 0:            
+            quals.add(
+                PercentAssignmentsApprovedRequirement("GreaterThanOrEqualTo",
+                    settings.MTURK_APPROVED_PERCENT_REQUIREMENT))
         if settings.MTURK_USONLY_REQUIREMENT:
             quals.add( LocaleRequirement("EqualTo", "US"))
+        if settings.MTURK_MASTERS_REQUIREMENT:
+            quals.add(Requirement('2ARFPLSP75KLA8M8DH1HTEQVJT3SY6' if sandbox \
+                else '2F1QJWKUDD8XADTFD2Q0G6UTO95ALH', "Exists"))
         self.paramdict = dict(
             hit_type=None,
             lifetime=datetime.timedelta(hours=settings.MTURK_HIT_LIFETIME_HOURS),

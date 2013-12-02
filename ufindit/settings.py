@@ -40,7 +40,7 @@ CACHES = {
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -181,11 +181,11 @@ LOGGING = {
 }
     
 # Email settings
-DEFAULT_FROM_EMAIL = 'denissavenkov@gmail.com'
-SERVER_EMAIL = 'denissavenkov@gmail.com'
+DEFAULT_FROM_EMAIL = 'ufindit.irlab@gmail.com'
+SERVER_EMAIL = 'ufindit.irlab@gmail.com'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'denissavenkov@gmail.com'
-EMAIL_HOST_PASSWORD = 'Barsik%777'
+EMAIL_HOST_USER = 'ufindit.irlab@gmail.com'
+EMAIL_HOST_PASSWORD = 'irlabpassword'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
@@ -211,11 +211,12 @@ MTURK_TASK_SUBMIT_URL='https://www.mturk.com/mturk/externalSubmit'
 MTURK_FRAME_HEIGHT=1200
 MTURK_USONLY_REQUIREMENT=True
 MTURK_HIT_LIFETIME_HOURS=72
-MTURK_HIT_DURATION=1
+MTURK_HIT_DURATION=0.5
 MTURK_MAX_ASSIGNMENTS=1
-MTURK_HIT_REWARD=0.01
+MTURK_HIT_REWARD=2
 MTURK_APPROVAL_DELAY=48
-MTURK_APPROVED_PERCENT_REQUIREMENT=50
+MTURK_APPROVED_PERCENT_REQUIREMENT=0
+MTURK_MASTERS_REQUIREMENT=True
 
 # EMU settings
 ENABLE_EMU_LOGGING = False
