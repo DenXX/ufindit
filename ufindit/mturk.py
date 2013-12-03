@@ -56,7 +56,7 @@ class MTurkProxy:
             lifetime=datetime.timedelta(hours=settings.MTURK_HIT_LIFETIME_HOURS),
             max_assignments=settings.MTURK_MAX_ASSIGNMENTS,
             title = settings.MTURK_GAME_TITLE,
-            description = settings.MTURK_DESCRIPTION,
+            description = settings.MTURK_GAME_DESCRIPTION,
             keywords = 'search',
             reward = settings.MTURK_HIT_REWARD,
             duration = datetime.timedelta(hours=settings.MTURK_HIT_DURATION),
