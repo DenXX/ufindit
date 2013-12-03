@@ -33,7 +33,6 @@ class MTurkProxy:
 
     def __init__(self, sandbox):
         if sandbox == '0':
-            assert False
             mturk_host = settings.MTURK_REST_ENDPOINT
         else:
             mturk_host = settings.MTURK_REST_SANDBOX_ENDPOINT
@@ -50,7 +49,7 @@ class MTurkProxy:
         if settings.MTURK_USONLY_REQUIREMENT:
             quals.add( LocaleRequirement("EqualTo", "US"))
         if settings.MTURK_MASTERS_REQUIREMENT:
-            quals.add(Requirement('2ARFPLSP75KLA8M8DH1HTEQVJT3SY6' if sandbox \
+            quals.add(Requirement('2ARFPLSP75KLA8M8DH1HTEQVJT3SY6' if sandbox!='0' \
                 else '2F1QJWKUDD8XADTFD2Q0G6UTO95ALH', "Exists"))
         self.paramdict = dict(
             hit_type=None,

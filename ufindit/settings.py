@@ -203,23 +203,24 @@ GAME_OVER_TEMPLATE = 'survey.html' # 'game_over.html'
 BING_API_KEY = 'ua4NbbaJUUabS47ZzGM2VANoW3s+EdogrHxbtRRsg1Y'
 
 # Amazon Mechanical Turk settings
-AWS_ACCESS_KEY='AKIAIDK22GOAOQQPMQTQ'
-AWS_SECRET_ACCESS_KEY='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'
+AWS_ACCESS_KEY='1MR3K9YRD0HAV38G9B02' #'AKIAIDK22GOAOQQPMQTQ'
+AWS_SECRET_ACCESS_KEY='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' #'wT4yL5RoGTd6ELx1ThM7w+xmQBx5TIj+hyeIm+De'
 MTURK_REST_SANDBOX_ENDPOINT='mechanicalturk.sandbox.amazonaws.com'
 MTURK_REST_ENDPOINT='mechanicalturk.amazonaws.com'
-MTURK_TASK_SUBMIT_URL='http://workersandbox.mturk.com/mturk/externalSubmit?'  #'https://www.mturk.com/mturk/externalSubmit?'
+MTURK_TASK_SUBMIT_URL= 'http://www.mturk.com/mturk/externalSubmit?' #'http://workersandbox.mturk.com/mturk/externalSubmit?'
 MTURK_FRAME_HEIGHT=1200
 MTURK_USONLY_REQUIREMENT=True
 MTURK_HIT_LIFETIME_HOURS=72
-MTURK_HIT_DURATION=0.5
-MTURK_MAX_ASSIGNMENTS=1
+MTURK_HIT_DURATION=1.0
+MTURK_MAX_ASSIGNMENTS=5
 MTURK_HIT_REWARD=2
 MTURK_APPROVAL_DELAY=48
-MTURK_APPROVED_PERCENT_REQUIREMENT=0
-MTURK_MASTERS_REQUIREMENT=False
+MTURK_APPROVED_PERCENT_REQUIREMENT=90
+MTURK_MASTERS_REQUIREMENT=True
 MTURK_GAME_TITLE = 'uFindIt Web Search Game'
 MTURK_GAME_DESCRIPTION = 'The goal of the game is to use web search to find answers ' + \
-                         'to 5 questions. Also, you will need to provide feedback on search results quality.'
+                         'to 5 questions. Also, you will need to provide feedback on search results quality. ' + \
+			 'Please read this if hit is not displayed http://mturkforum.com/showthread.php?10046-problem-with-hits'
 
 # EMU settings
 ENABLE_EMU_LOGGING = False
