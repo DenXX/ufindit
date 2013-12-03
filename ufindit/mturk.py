@@ -1,6 +1,6 @@
 from boto.mturk.connection import *
 from boto.mturk.question import ExternalQuestion
-from boto.mturk.qualification import LocaleRequirement, PercentAssignmentsApprovedRequirement, Qualifications
+from boto.mturk.qualification import Requirement, LocaleRequirement, PercentAssignmentsApprovedRequirement, Qualifications
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
