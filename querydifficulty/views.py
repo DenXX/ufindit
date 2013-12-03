@@ -1,3 +1,6 @@
+from urllib import unquote, urlencode
+import urllib2
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
@@ -8,6 +11,8 @@ from django.views.decorators.csrf import csrf_exempt
 from ufindit.logger import EventLogger
 from ufindit.models import Player, PlayerTask, Serp, Game, PlayerGame
 from querydifficulty.models import QueryUrlProblem, QueryDifficulty, Survey
+
+import settings
 
 @csrf_exempt
 def submit_query_difficulty(request, task_id):
@@ -83,10 +88,9 @@ def submit_survey_view(request, game_id):
     
     message = ""
     if player_game.assignmentId:
-        response = urllib2.urlopen(settings.MTURK_TASK_SUBMIT_URL +
+        return HttpResponseRedirect(settings.MTURK_TASK_SUBMIT_URL +
             urlencode(dict(
                 assignmentId=player_game.assignmentId,
                 sb='submit HIT')))
-        message = response.read()
  
-    return render(request, 'game_over.html', {'game':game, "msg":message})
+    return render(request, 'game_over.html', {'game':game, "message":message})
