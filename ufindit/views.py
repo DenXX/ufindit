@@ -119,17 +119,18 @@ class GameView(View):
         if not player_game.finish:
             player_game.finish = now()
             player_game.save()
-        if player_game.assignmentId:
-            response = urllib2.urlopen(settings.MTURK_TASK_SUBMIT_URL +
-                urlencode(dict(
-                    assignmentId=player_game.assignmentId,
-                    sb='submit HIT')))
         return HttpResponseRedirect(reverse('game_over',
             kwargs={'game_id':player_game.game.id}))
 
     def game_over(self, request, player_game):
         context = {'message':'', 'game':player_game.game}
+        if player_game.assignmentId:
+            response = urllib2.urlopen(settings.MTURK_TASK_SUBMIT_URL +
+                urlencode(dict(
+                    assignmentId=player_game.assignmentId,
+                    sb='submit HIT')))
         return render(request, self.game_over_template, context)
+
 
     def dispatch(self, request, **kwargs):
         # Check if the current request is a demo query from mturk
