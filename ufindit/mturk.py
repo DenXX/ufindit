@@ -84,7 +84,7 @@ class MTurkUser:
             user = User.objects.create_user(workerId, workerId+'@mturk.com',
                 workerId)
             user.save()
-            player = Player.objects.create(user=user, mturk_worker_id=workerId)
+            player = Player(user=user, mturk_worker_id=workerId)
             player.save()
         user = authenticate(username=workerId+'@mturk.com', password=workerId)
         return user
