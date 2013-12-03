@@ -1,6 +1,6 @@
 from django.utils.timezone import now
 from search_proxy import SearchProxy
-from urllib import unquote
+from urllib import unquote, urlencode
 import urllib2
 
 from django.contrib.auth import authenticate, login
@@ -121,8 +121,8 @@ class GameView(View):
             player_game.save()
         if player_game.assignmentId:
             response = urllib2.urlopen(settings.MTURK_TASK_SUBMIT_URL +
-                urllib.urlencode(dict(
-                    assignmentId=player_game.mturk_assignment_id,
+                urlencode(dict(
+                    assignmentId=player_game.assignmentId,
                     sb='submit HIT')))
         return HttpResponseRedirect(reverse('game_over',
             kwargs={'game_id':player_game.game.id}))
