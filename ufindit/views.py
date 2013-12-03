@@ -19,6 +19,7 @@ from httpproxy.views import HttpProxy
 from ufindit.forms import RegistrationForm
 from ufindit.logger import EventLogger
 from ufindit.models import Game, Player, PlayerGame, PlayerTask, Serp
+from ufindit.mturk import MTurkUser
 
 import settings
 
@@ -110,21 +111,9 @@ class GameView(View):
         game = Game.objects.filter(hitId=hitId, active=True)
         if len(game) != 1:
             return False
-        user = self.get_mturk_user(workerId)
+        user = MTurkUser.get_mturk_user(workerId)
         login(request, user)
         return user.is_authenticated()
-
-    def get_mturk_user(self, workerId):
-        try:
-            player = Player.objects.get(mturk_worker_id=workerId)
-        except Player.DoesNotExist:
-            user = User.objects.create_user(workerId, workerId+'@mturk.com',
-                workerId)
-            user.save()
-            player = Player.objects.create(user=user, mturk_worker_id=workerId)
-            player.save()
-        user = authenticate(username=workerId+'@mturk.com', password=workerId)
-        return user
 
     def finish_game(self, request, player_game):
         if not player_game.finish:
@@ -155,7 +144,12 @@ class GameView(View):
         player_game, created = PlayerGame.objects.get_or_create(player=player,
             game=game)
         # If player opens the game, then he accepted the rules
-        player_game.rules_accepted = True
+        if not player_game.rules_accepted:
+            if 'accepted' in request.GET:
+                player_game.rules_accepted = True
+            else:
+                return HttpResponseRedirect(reverse('rules', kwargs={'game_id':kwargs['game_id']}))
+
         player_game.save()
         if self.is_game_over:
             if not player_game.finish:

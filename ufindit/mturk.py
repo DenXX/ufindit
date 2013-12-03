@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 
 
-from ufindit.models import Game
+from ufindit.models import Game, Player
 
 import settings
 
@@ -71,6 +71,23 @@ class MTurkProxy:
         hit = self.mturk_connection.create_hit( **self.paramdict )[0]
         game.hitId = hit.HITId
         game.save()
+
+
+class MTurkUser:
+    """ Manages users that came to the game from MTurk """
+
+    @staticmethod
+    def get_mturk_user(workerId):
+        try:
+            player = Player.objects.get(mturk_worker_id=workerId)
+        except Player.DoesNotExist:
+            user = User.objects.create_user(workerId, workerId+'@mturk.com',
+                workerId)
+            user.save()
+            player = Player.objects.create(user=user, mturk_worker_id=workerId)
+            player.save()
+        user = authenticate(username=workerId+'@mturk.com', password=workerId)
+        return user
 
 
 if __name__ == "__main__":
