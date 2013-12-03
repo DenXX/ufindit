@@ -80,5 +80,13 @@ def submit_survey_view(request, game_id):
             request.POST else '',
         comments=request.POST['feedback'] if 'feedback' in request.POST else '')
     survey.save()
-
-    return render(request, 'game_over.html', {'game':game})
+    
+    message = ""
+    if player_game.assignmentId:
+        response = urllib2.urlopen(settings.MTURK_TASK_SUBMIT_URL +
+            urlencode(dict(
+                assignmentId=player_game.assignmentId,
+                sb='submit HIT')))
+        message = response.read()
+ 
+    return render(request, 'game_over.html', {'game':game, "msg":message})
