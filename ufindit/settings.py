@@ -20,7 +20,7 @@ DATABASES = {
         'HOST':     '',                                     # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT':     '',                                     # Set to empty string for default.
     }
-    if DEBUG else {
+    if not DEBUG else {
         'ENGINE':   'django.db.backends.postgresql_psycopg2',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME':     'ufindit',                                  # Or path to database file if using sqlite3.
         'USER':     'ufindit',
@@ -216,7 +216,7 @@ MTURK_MAX_ASSIGNMENTS=1
 MTURK_HIT_REWARD=2
 MTURK_APPROVAL_DELAY=48
 MTURK_APPROVED_PERCENT_REQUIREMENT=0
-MTURK_MASTERS_REQUIREMENT=True
+MTURK_MASTERS_REQUIREMENT=False
 MTURK_GAME_TITLE = 'uFindIt Web Search Game'
 MTURK_GAME_DESCRIPTION = 'The goal of the game is to use web search to find answers ' + \
                          'to 5 questions. Also, you will need to provide feedback on search results quality.'
