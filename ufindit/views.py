@@ -143,6 +143,12 @@ class GameView(View):
         player, _ = Player.objects.get_or_create(user=request.user)
         player_game, created = PlayerGame.objects.get_or_create(player=player,
             game=game)
+
+        # Save assignment ID if just created
+        if created and ('assignmentId' in request.GET):
+            player_game.assignmentId = request.GET['assignmentId']
+            player_game.save()
+
         # If player opens the game, then he accepted the rules
         if not player_game.rules_accepted:
             if 'accepted' in request.GET:
@@ -155,11 +161,6 @@ class GameView(View):
             if not player_game.finish:
                 raise Http404()
             return self.game_over(request, player_game)
-
-        # Save assignment ID if just created
-        if created and ('assignmentId' in request.GET):
-            player_game.assignmentId = request.GET['assignmentId']
-            player_game.save()
 
         if player_game.current_task_index >= \
             PlayerTask.objects.filter(player_game=player_game).count():
