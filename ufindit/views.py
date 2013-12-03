@@ -83,6 +83,7 @@ def search(request, task_id, template='serp.html'):
         start_page = max([1, page - 3])
         end_page = min([paginator.num_pages + 1, page + 4])
         context['page_numbers'] = range(start_page, end_page)
+        context['pages_number'] = paginator.num_pages
         # Log query event
         EventLogger.query(player_task, query, serp, context['results'].number)
     context['enable_emu'] = settings.ENABLE_EMU_LOGGING

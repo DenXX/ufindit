@@ -55,9 +55,8 @@ class MTurkProxy:
             hit_type=None,
             lifetime=datetime.timedelta(hours=settings.MTURK_HIT_LIFETIME_HOURS),
             max_assignments=settings.MTURK_MAX_ASSIGNMENTS,
-            title = 'Search Game',
-            description = 'You will need to search answers to the questions '
-                'given using the provided search engine',
+            title = settings.MTURK_GAME_TITLE,
+            description = settings.MTURK_DESCRIPTION,
             keywords = 'search',
             reward = settings.MTURK_HIT_REWARD,
             duration = datetime.timedelta(hours=settings.MTURK_HIT_DURATION),

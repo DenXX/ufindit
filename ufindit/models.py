@@ -129,6 +129,9 @@ class UserSerpResultsOrder(models.Model):
     order = models.CommaSeparatedIntegerField(blank=True, null=True,
         max_length=512, db_index=True, help_text=u'The order of results to show')
 
+    def __unicode__(self):
+        return self.player.user.username + " Query:" + self.serp.query
+
     class Meta:
         unique_together = ("serp", "player")
 

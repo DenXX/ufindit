@@ -44,7 +44,6 @@ def submit_url_problem(request, task_id):
     misinterpreted_terms = ''
     missing_relation_terms = ''
     extra = ''
-    print request.POST
     if 'missing[]' in request.POST:
         missing_terms = ','.join(request.POST.getlist('missing[]'))
     if 'misinterpreted[]' in request.POST:
