@@ -217,7 +217,7 @@ MTURK_HIT_REWARD=2
 MTURK_APPROVAL_DELAY=48
 MTURK_APPROVED_PERCENT_REQUIREMENT=0
 MTURK_MASTERS_REQUIREMENT=True
-MTURK_GAME_TITLE = 'Search Game'
+MTURK_GAME_TITLE = 'uFindIt Web Search Game'
 MTURK_GAME_DESCRIPTION = 'The goal of the game is to use web search to find answers ' + \
                          'to the given questions. There will be 5 questions asked. ' + \
                          'Also, you will need to provide feedback on search results ' + \

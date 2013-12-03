@@ -39,7 +39,6 @@ class MTurkProxy:
             aws_access_key_id=settings.AWS_ACCESS_KEY,
             aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
             host=mturk_host)
-        print self.mturk_connection.get_account_balance()
 
         quals = Qualifications()
         if settings.MTURK_APPROVED_PERCENT_REQUIREMENT > 0:            
