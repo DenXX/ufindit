@@ -8,7 +8,7 @@
     <div class="panel-group" id="tasks">
     {% for task in game.playertask_set.all %}
             <div class="panel panel-default">
-                <div class="panel-heading"><a data-toggle="collapse" data-parent="#tasks" href="#collapse{{ forloop.counter }}">{{ task.task.text }}</a></div>
+                <div class="panel-heading">{{ task.task.text }}<a data-toggle="collapse" href="#collapse{{ forloop.counter }}" class="glyphicon glyphicon-chevron-down pull-right"></a></div>
                 <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse in">
                     <div class="panel-body">
                         Answer: {{ task.answer }}<br />
