@@ -17,10 +17,32 @@
                     </div>
                     <ol class="list-group">
                         {% for event in task.event_set.all %}
-                        <li class="list-group-item">{{ event.event }} - {% if event.query %}{{ event.query }}{% endif %} {% if event.url %}{{ event.url }}{% endif %}
-                            [{{ event.time|date:"r" }}]
+                        <li class="list-group-item">{{ event.event }} - {% if event.query %}<a href="#" target="blank">{{ event.query }}</a>{% endif %}
+                            {% if event.url %}<a href="{% url 'play_http_proxy' url=event.url %}" target="blank">{{ event.url }}</a>{% endif %}
+                            [{{ event.time|date:"r" }}]<br />
+                            {% if event.query %}
+                                Results quality:
+                                <ul>
+                                {% for qup in task.queryurlproblem_set.all %}
+                                    {% if qup.serp == event.serp %}
+                                        {% with qud.doc_rank as rank %}    
+                                            <li>{{ qup.serp.rank }}</li>
+                                        {% endwith %}
+                                    {% endif %}
+                                {% endfor %}
+                                </ul>
+                                Query difficulty:
+                                <ul>
+                                {% for qd in task.querydifficulty_set.all %}
+                                    {% if qd.serp == event.serp %}
+                                        <li>{{ qd.difficulty }}</li>
+                                    {% endif %}
+                                {% endfor %}
+                                </ul>
+                            {% endif %}
                         </li>
                         {% endfor %}
+                    </ol>
                     </ol>
                 </div>
             </div>

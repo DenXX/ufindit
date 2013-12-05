@@ -39,7 +39,10 @@ urlpatterns = patterns('',
         {'template_name': 'reset_complete.html'}, name='password_reset_complete'),
 
     # Proxy
-    url(r'^(?P<task_id>[0-9]*)/http/(?P<url>.*)$', HttpProxy.as_view(
+    url(r'^http/(?P<url>.+)$', HttpProxy.as_view(
+        view_name='play_http_proxy', mode='play',
+        user_agent=settings.PROXY_USER_AGENT), name='play_http_proxy'),
+    url(r'^(?P<task_id>[0-9]+)/http/(?P<url>.*)$', HttpProxy.as_view(
         view_name='http_proxy', mode='playrecord',
         user_agent=settings.PROXY_USER_AGENT), name='http_proxy'),
     # Serp links
@@ -47,11 +50,11 @@ urlpatterns = patterns('',
         'ufindit.views.http_proxy_decorator', name='http_proxy_decorator'),
 
     # EMU and event logging
-    url(r'^(?P<task_id>[0-9]*)/emu/emu.js$', 'ufindit.emu_views.emu_js',
+    url(r'^(?P<task_id>[0-9]+)/emu/emu.js$', 'ufindit.emu_views.emu_js',
         name='emu_js'),
-    url(r'^(?P<task_id>[0-9]*)/emu/log$', 'ufindit.emu_views.log_event',
+    url(r'^(?P<task_id>[0-9]+)/emu/log$', 'ufindit.emu_views.log_event',
         name='emu_log_event'),
-    url(r'^(?P<task_id>[0-9]*)/emu/save_page$', 'ufindit.emu_views.save_page',
+    url(r'^(?P<task_id>[0-9]+)/emu/save_page$', 'ufindit.emu_views.save_page',
         name='emu_save_page'),
 
     # MTurk related urls
