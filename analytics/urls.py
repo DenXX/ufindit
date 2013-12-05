@@ -11,5 +11,5 @@ urlpatterns = patterns('',
     url(r'^games/$', user_passes_test(lambda u: u.is_staff)(GamesView.as_view()),
         name='games'),
     url(r'^games/(?P<game_id>[0-9]*)/$', user_passes_test(lambda u: u.is_staff)(GameView.as_view()),
-        name='game_analytics'),
+        name='game'),
 )

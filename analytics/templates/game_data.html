@@ -2,20 +2,22 @@
 
 {% block content %}
 <div class="container">
-    <h2>{{ game.player.user.username }} - {{ game.game.name }}</h2>
+    <h2>{{ game.player.user.username }} - {{ game.game.name }} <span class="badge">{{ game.start }} - {{ game.finish }}</span> <small><a href="{% url 'analytics:games' %}">to the list of games</a></small></h2>
     <hr />
-    <ol>
+
+    <div class="panel-group" id="tasks">
     {% for task in game.playertask_set.all %}
-        <li>
             <div class="panel panel-default">
-                <div class="panel-heading">{{ task.task.text }}</div>
-                <div class="panel-body">
-                    Answer: {{ task.answer }}<br />
-                    Start: {{ task.start }}<br />
-                    Finish: {{ task.finish }}<br />
-                    <ol>
+                <div class="panel-heading"><a data-toggle="collapse" data-parent="#tasks" href="#collapse{{ forloop.index }}">{{ task.task.text }}</a></div>
+                <div id="collapse{{ forloop.index }}" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        Answer: {{ task.answer }}<br />
+                        Start: {{ task.start }}<br />
+                        Finish: {{ task.finish }}<br />
+                    </div>
+                    <ol class="list-group">
                         {% for event in task.event_set.all %}
-                        <li>{{ event.event }} - {% if event.query %}{{ event.query }}{% endif %} {% if event.url %}{{ event.url }}{% endif %}
+                        <li class="list-group-item">{{ event.event }} - {% if event.query %}{{ event.query }}{% endif %} {% if event.url %}{{ event.url }}{% endif %}
                             [{{ event.time|date:"r" }}]
                         </li>
                         {% endfor %}
@@ -24,6 +26,7 @@
             </div>
         </li>
     {% endfor %}
-    </ol>
+    </div>
+
 </div>
 {% endblock %}
