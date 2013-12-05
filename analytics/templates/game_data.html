@@ -8,8 +8,8 @@
     <div class="panel-group" id="tasks">
     {% for task in game.playertask_set.all %}
             <div class="panel panel-default">
-                <div class="panel-heading"><a data-toggle="collapse" data-parent="#tasks" href="#collapse{{ forloop.index }}">{{ task.task.text }}</a></div>
-                <div id="collapse{{ forloop.index }}" class="panel-collapse collapse in">
+                <div class="panel-heading"><a data-toggle="collapse" data-parent="#tasks" href="#collapse{{ forloop.counter }}">{{ task.task.text }}</a></div>
+                <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse in">
                     <div class="panel-body">
                         Answer: {{ task.answer }}<br />
                         Start: {{ task.start }}<br />
