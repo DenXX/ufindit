@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>{{ game.player.user.username }} - {{ game.game.name }}</h2>
+    <hr />
+    <ol>
+    {% for task in game.playertask_set.all %}
+        <li>
+            <div class="panel panel-default">
+                <div class="panel-heading">{{ task.task.text }}</div>
+                <div class="panel-body">
+                    Answer: {{ task.answer }}<br />
+                    Start: {{ task.start }}<br />
+                    Finish: {{ task.finish }}<br />
+                    <ol>
+                        {% for event in task.event_set.all %}
+                        <li>{{ event.event }} - {% if event.query %}{{ event.query }}{% endif %} {% if event.url %}{{ event.url }}{% endif %}
+                            [{{ event.time|date:"r" }}]
+                        </li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </li>
+    {% endfor %}
+    </ol>
+</div>
+{% endblock %}

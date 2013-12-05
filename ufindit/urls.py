@@ -66,6 +66,9 @@ urlpatterns = patterns('',
     (r'^qdiff/', include('querydifficulty.urls', app_name='querydifficulty',
         namespace='querydifficulty')),
 
+    # Analytics
+    url(r'^data/', include('analytics.urls', app_name='analytics',
+        namespace='analytics')),
     # Admin views
     url(r'^admin/', include(admin.site.urls)),
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

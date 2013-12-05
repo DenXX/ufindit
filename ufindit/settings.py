@@ -20,7 +20,7 @@ DATABASES = {
         'HOST':     '',                                     # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT':     '',                                     # Set to empty string for default.
     }
-    if not DEBUG else {
+    if DEBUG else {
         'ENGINE':   'django.db.backends.postgresql_psycopg2',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME':     'ufindit',                                  # Or path to database file if using sqlite3.
         'USER':     'ufindit',
@@ -127,6 +127,7 @@ WSGI_APPLICATION = 'ufindit.wsgi.application'
 TEMPLATE_DIRS = (
     "/home/dsavenk/Projects/irlab/ufindit/ufindit/templates",
     "/home/dsavenk/Projects/irlab/ufindit/querydifficulty/templates",
+    "/home/dsavenk/Projects/irlab/ufindit/analytics/templates",
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -141,6 +142,7 @@ INSTALLED_APPS = (
     'south',
     'httpproxy',
     'ufindit',
+    'analytics',
     'querydifficulty',
 )
 

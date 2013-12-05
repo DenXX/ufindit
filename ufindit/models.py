@@ -74,6 +74,9 @@ class PlayerGame(models.Model):
     def __unicode__(self):
         return unicode(self.game) + ' (' + self.player.user.email + ')'
 
+    class Meta:
+        ordering = ['start']
+
 
 class PlayerTask(models.Model):
     player_game = models.ForeignKey(PlayerGame)
@@ -94,7 +97,7 @@ class PlayerTask(models.Model):
             self.order)
 
     class Meta:
-        ordering = ['order']
+        ordering = ['player_game', 'order']
 
 
 class Serp(models.Model):

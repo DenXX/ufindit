@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Completed games</h2>
+    <ol>
+    {% for game in games %}
+        <li><a href="{% url 'analytics:game_analytics' game_id=game.id %}">{{ game.player.user.username }} - {{ game.game.name }} [{{ game.start }} - {{ game.finish }}]</a></li>
+    {% endfor %}
+    </ol>
+</div>
+{% endblock %}
