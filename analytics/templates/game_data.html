@@ -25,9 +25,11 @@
                                 <ul>
                                 {% for qup in task.queryurlproblem_set.all %}
                                     {% if qup.serp == event.serp %}
-                                        {% with qud.doc_rank as rank %}    
-                                            <li>{{ qup.serp.rank }}</li>
-                                        {% endwith %}
+                                        <li>{% if qup.missing_terms %} Missing topic: {{ qup.missing_terms }}<br />{% endif %}
+                                            {% if qup.misinterpreted_terms %} Misinterpreted terms: {{ qup.misinterpreted_terms }}<br /> {% endif %}
+                                            {% if qup.missing_relations %} Missing relation: {{ qup.missing_relations }}<br /> {% endif %}
+                                            {% if qup.extra %} Other: {{ qup.extra }}<br /> {% endif %}
+                                        </li>
                                     {% endif %}
                                 {% endfor %}
                                 </ul>
