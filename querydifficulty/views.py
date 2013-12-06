@@ -57,7 +57,8 @@ def submit_url_problem(request, task_id):
         missing_relation_terms = ','.join(request.POST.getlist('missing_relation[]'))
     if 'extra' in request.POST:
         extra = request.POST['extra']
-    QueryUrlProblem(player_task=player_task, serp=serp, doc_rank=rank, missing_terms=missing_terms,
+    QueryUrlProblem(player_task=player_task, serp=serp, doc_rank=rank,
+        url=request.POST['rank'], missing_terms=missing_terms,
         misinterpreted_terms=misinterpreted_terms, missing_relations=missing_relation_terms,
         extra=extra).save()
     return HttpResponse("ok")

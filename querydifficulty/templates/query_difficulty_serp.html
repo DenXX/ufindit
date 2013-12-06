@@ -41,6 +41,7 @@
   <form method="POST" id="queryUrlProblemForm">
     <input type="hidden" name="serpid" value="{{ serpid }}">
     <input type="hidden" name="rank" value="{{ results.start_index }}" />
+    <input type="hidden" name="url" value="{{ results.0.url }}" />
     <small>
     <div class="panel panel-default">
       <div class="panel-heading">Don't like this result? Why?</div>

@@ -14,6 +14,8 @@ class QueryUrlProblem(models.Model):
     serp = models.ForeignKey(Serp, help_text=u'Search engine results')
     doc_rank = models.PositiveSmallIntegerField(help_text=u'The rank of the '
         'document', db_index=True)
+    url = models.CharField(max_length=1024, null=True, blank=True,
+        help_text=u'URL of a web document')
     time = models.DateTimeField(auto_now_add=True, help_text=u'Time when user '
         'judged serp')
     missing_terms = models.CommaSeparatedIntegerField(max_length=1024,
