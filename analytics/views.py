@@ -12,7 +12,10 @@ class GamesView(ListView):
     template_name = "games_data.html"
 
     def get_queryset(self):
-        return self.model.objects.exclude(finish=None)
+        if self.kwargs['finish'] == 'f':
+            return self.model.objects.exclude(finish=None)
+        else:
+            return self.model.objects.all()
 
 
 class GameView(View):

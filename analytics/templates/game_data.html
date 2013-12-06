@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="container">
-    <h2>{{ game.player.user.username }} - {{ game.game.name }} <span class="badge">{{ game.start }} - {{ game.finish }}</span> <small><a href="{% url 'analytics:games' %}">to the list of games</a></small></h2>
+    <h2>{{ game.player.user.username }} - {{ game.game.name }} <span class="badge">{{ game.start }} - {{ game.finish }}</span> <small><a href="{% url 'analytics:games' finish='f' %}">to the list of games</a></small></h2>
     <hr />
 
     <div class="panel-group" id="tasks">
