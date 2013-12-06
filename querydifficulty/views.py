@@ -58,7 +58,7 @@ def submit_url_problem(request, task_id):
     if 'extra' in request.POST:
         extra = request.POST['extra']
     QueryUrlProblem(player_task=player_task, serp=serp, doc_rank=rank,
-        url=request.POST['rank'], missing_terms=missing_terms,
+        url=request.POST['url'], missing_terms=missing_terms,
         misinterpreted_terms=misinterpreted_terms, missing_relations=missing_relation_terms,
         extra=extra).save()
     return HttpResponse("ok")

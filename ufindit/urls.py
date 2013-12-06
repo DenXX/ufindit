@@ -39,7 +39,7 @@ urlpatterns = patterns('',
         {'template_name': 'reset_complete.html'}, name='password_reset_complete'),
 
     # Proxy
-    url(r'^http/(?P<url>.+)$', HttpProxy.as_view(
+    url(r'^http/play/(?P<url>.+)$', HttpProxy.as_view(
         view_name='play_http_proxy', mode='play',
         user_agent=settings.PROXY_USER_AGENT), name='play_http_proxy'),
     url(r'^(?P<task_id>[0-9]+)/http/(?P<url>.*)$', HttpProxy.as_view(
