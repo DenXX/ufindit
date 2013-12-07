@@ -201,10 +201,11 @@ class RandomizationSearchProvider(SearchProvider):
     """
     Randomizes search results for the given query
     """
-    def __init__(self, search_provider):
+    def __init__(self, search_provider, topn):
         if not isinstance(search_provider, CacheSearchProvider):
             raise ValueError('Randomization can only be used on top of caching')
         self._search_provider = search_provider
+        self._topn = topn
 
     def search(self, player, query, verbose=False):
         results = self._search_provider.search(player, query)
@@ -216,8 +217,9 @@ class RandomizationSearchProvider(SearchProvider):
             from random import shuffle
             order = range(len(results))
             # We shuffle only top 10 results
-            order1 = order[:10]
-            order2 = order[10:]
+            topn = min((self._topn, len(results)))
+            order1 = order[:topn]
+            order2 = order[topn:]
             shuffle(order1)
             order = order1 + order2
             results_order = UserSerpResultsOrder(player=player, serp=serp,
@@ -260,8 +262,9 @@ class SearchProxy(SearchProvider):
         # Use caching
         provider = CacheSearchProvider(SearchProxy._engines[engine]())
         # Use randomization if setting is on
-        if settings.RANDOMIZE_SEARCH_RESULTS:
-            return RandomizationSearchProvider(provider)
+        if settings.RANDOMIZE_TOPN_RESULTS > 0:
+            return RandomizationSearchProvider(provider, settings.RANDOMIZE_TOPN_RESULTS)
+        return provider
 
     def _normalize_query(self, query):
         """

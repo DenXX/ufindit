@@ -28,7 +28,7 @@ uFindIt
                   <ol class="search-results" start="{{ results.start_index }}">
                     {% for result in results %}
                     <li>
-                        <div class="nospace"><h3 class="nospace"><a href="{% url 'http_proxy_decorator' task_id=task_id serp_id=serpid url=result.safe_url %}" class="nospace">{{ result.title|safe }}</a></h3></div>
+                        <div class="nospace"><h3 class="nospace"><a href="{% url 'http_proxy_decorator' task_id=task_id serp_id=serpid url=result.safe_url %}" class="nospace" target="blank">{{ result.title|safe }}</a></h3></div>
                         <div class="nospace"><cite class="search-results-link">{{ result.display_url|safe }}</cite></div>
                         <p>{{ result.snippet|safe }}</p>
                     </li>
