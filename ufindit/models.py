@@ -32,9 +32,14 @@ class Game(models.Model):
         help_text=u'Are game questions randomized for each participant')
     hitId = models.CharField(max_length=255, blank=True, null=True, 
         db_index=True, help_text=u'If game is in MTurk this is the hitId')
+    created = models.DateTimeField(auto_now_add=True, null=True,
+        help_text=u'When the game was created')
 
     def __unicode__(self):
         return self.name
+
+    class Meta:
+        ordering = ['created',]
 
 
 class PlayerGame(models.Model):
