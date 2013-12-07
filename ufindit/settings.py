@@ -214,15 +214,16 @@ MTURK_FRAME_HEIGHT=1200
 MTURK_USONLY_REQUIREMENT=True
 MTURK_HIT_LIFETIME_HOURS=72
 MTURK_HIT_DURATION=1.0
-MTURK_MAX_ASSIGNMENTS=5
-MTURK_HIT_REWARD=2
+MTURK_MAX_ASSIGNMENTS=20
+MTURK_HIT_REWARD=1.5
 MTURK_APPROVAL_DELAY=48
 MTURK_APPROVED_PERCENT_REQUIREMENT=90
 MTURK_MASTERS_REQUIREMENT=True
-MTURK_GAME_TITLE = 'uFindIt Web Search Game'
+MTURK_GAME_TITLE = 'uFindIt Web Search Game 2'
 MTURK_GAME_DESCRIPTION = 'The goal of the game is to use web search to find answers ' + \
-                         'to 5 questions. Also, you will need to provide feedback on search results quality. ' + \
-			 'Please read this if hit is not displayed http://mturkforum.com/showthread.php?10046-problem-with-hits'
+                         'to 4 questions. The game usually takes from 20-40 minutes. ' + \
+			             'Please read this if hit is not displayed ' + \
+                         'http://mturkforum.com/showthread.php?10046-problem-with-hits'
 
 # EMU settings
 ENABLE_EMU_LOGGING = False
