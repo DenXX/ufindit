@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <h2>Query-Document problems<small>&nbsp;</small></h2>
+  <hr />
+
+  <div class="row"><div class="col-md-8">
+    {% regroup qu_problems by serp.query as query_list %}
+    <ul>
+      {% for query in query_list %}
+        <li>{{ query.grouper }}
+          <ul>
+              {% regroup query.list by url as url_list %}
+              {% for url_problem in url_list %}
+                <li><a href="{% url 'play_http_proxy' url=url_problem.grouper %}">{{ url_problem.grouper }}</a>
+                    <ul>
+                      {% for qup in url_problem.list %}
+                        <li>
+                          {% if qup.missing_terms %} Missing topic: {{ qup.missing_terms }}<br />{% endif %}
+                          {% if qup.misinterpreted_terms %} Misinterpreted terms: {{ qup.misinterpreted_terms }}<br /> {% endif %}
+                          {% if qup.missing_relations %} Missing relation: {{ qup.missing_relations }}<br /> {% endif %}
+                          {% if qup.extra %} Other: {{ qup.extra }}<br /> {% endif %}
+                        </li>
+                      {% endfor %}
+                    </ul>
+                </li>
+              {% endfor %}
+          </ul>
+        </li>
+      {% endfor %}
+    </ul>
+  </div></div>
+</div>
+{% endblock %}
+
