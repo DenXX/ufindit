@@ -18,13 +18,13 @@ class QueryUrlProblem(models.Model):
         help_text=u'URL of a web document')
     time = models.DateTimeField(auto_now_add=True, help_text=u'Time when user '
         'judged serp')
-    missing_terms = models.CommaSeparatedIntegerField(max_length=1024,
+    missing_terms = models.CharField(max_length=1024,
         blank=True, null=True, help_text=u'List of term indexes which are '
         'missing from the results')
-    misinterpreted_terms = models.CommaSeparatedIntegerField(max_length=1024,
+    misinterpreted_terms = models.CharField(max_length=1024,
         blank=True, null=True, help_text=u'List of term indexes which are '
         'misinterpreted in the results')
-    missing_relations = models.CommaSeparatedIntegerField(max_length=1024,
+    missing_relations = models.CharField(max_length=1024,
         blank=True, null=True, help_text=u'List of term indexes relations '
         'between which are missing in the results')
     extra = models.CharField(max_length=512, blank=True, null=True, 

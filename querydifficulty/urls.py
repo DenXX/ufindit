@@ -32,4 +32,8 @@ urlpatterns = patterns('',
         template_name='rules5.html'), name='rules5'),
     url(r'^game/(?P<game_id>[0-9]+)/rules/6/$', RulesView.as_view(
         template_name='rules6.html'), name='rules6'),
+
+    # Analytics
+    url(r'^qud/$', 'querydifficulty.views.query_url_problems_view',
+        name='query_difficulty_admin'),
 )

@@ -215,11 +215,11 @@ MTURK_USONLY_REQUIREMENT=True
 MTURK_HIT_LIFETIME_HOURS=72
 MTURK_HIT_DURATION=1.0
 MTURK_MAX_ASSIGNMENTS=20
-MTURK_HIT_REWARD=1.5
+MTURK_HIT_REWARD=2
 MTURK_APPROVAL_DELAY=48
 MTURK_APPROVED_PERCENT_REQUIREMENT=90
 MTURK_MASTERS_REQUIREMENT=True
-MTURK_GAME_TITLE = 'uFindIt Web Search Game 2'
+MTURK_GAME_TITLE = 'uFindIt Web Search Game 5'
 MTURK_GAME_DESCRIPTION = 'The goal of the game is to use web search to find answers ' + \
                          'to 4 questions. The game usually takes from 20-40 minutes. ' + \
 			             'Please read this if hit is not displayed ' + \

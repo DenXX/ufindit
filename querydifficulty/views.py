@@ -1,12 +1,14 @@
 from urllib import unquote, urlencode
 import urllib2
 
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponseRedirect, HttpResponse, HttpRequest
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic.list import ListView
 
 from ufindit.logger import EventLogger
 from ufindit.models import Player, PlayerTask, Serp, Game, PlayerGame
@@ -95,3 +97,10 @@ def submit_survey_view(request, game_id):
                 sb='submit HIT')))
  
     return render(request, 'game_over.html', {'game':game, "message":message})
+
+@staff_member_required
+def query_url_problems_view(request):
+    context = {}
+    qu_problems = {}
+    context['qu_problems'] = QueryUrlProblem.objects.all()
+    return render(request, 'qud_admin.html', context)
