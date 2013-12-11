@@ -4,7 +4,12 @@
 <div class="container">
   <h2>Query-Document problems<small>&nbsp;</small></h2>
   <hr />
-
+<div class="panel panel-default">
+  <div class="panel-body">
+    {% for game in games %} <a href="{% url 'querydifficulty:query_difficulty_game_admin' game_id=game.id %}">{{ game.name }}</a> | {% endfor %}
+  </div>
+</div>
+  
   <div class="row"><div class="col-md-8">
     {% regroup qu_problems by serp.query as query_list %}
     <ul>

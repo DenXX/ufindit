@@ -99,8 +99,12 @@ def submit_survey_view(request, game_id):
     return render(request, 'game_over.html', {'game':game, "message":message})
 
 @staff_member_required
-def query_url_problems_view(request):
+def query_url_problems_view(request, game_id=None):
     context = {}
     qu_problems = {}
-    context['qu_problems'] = QueryUrlProblem.objects.all()
+    if game_id:
+        context['qu_problems'] = QueryUrlProblem.objects.filter(player_task__player_game__game__id=game_id)
+    else:
+        context['qu_problems'] = QueryUrlProblem.objects.all()
+    context['games'] = Game.objects.all()
     return render(request, 'qud_admin.html', context)

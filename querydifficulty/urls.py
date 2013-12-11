@@ -36,4 +36,6 @@ urlpatterns = patterns('',
     # Analytics
     url(r'^qud/$', 'querydifficulty.views.query_url_problems_view',
         name='query_difficulty_admin'),
+    url(r'^qud/(?P<game_id>[0-9]+)/$', 'querydifficulty.views.query_url_problems_view',
+        name='query_difficulty_game_admin'),
 )
