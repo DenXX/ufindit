@@ -3,7 +3,7 @@ from django import forms
 from django.db import models
 from django.contrib.auth.models import User
 
-from ufindit.models import Serp, PlayerTask, PlayerGame
+from ufindit.models import Player, Serp, PlayerTask, PlayerGame
 
 class QueryUrlProblem(models.Model):
     """
@@ -33,6 +33,24 @@ class QueryUrlProblem(models.Model):
     def __unicode__(self):
         return self.player_task.player_game.player.user.username + " - " + \
             self.serp.query + "( " + str(self.doc_rank) + " )"
+
+class QueryUrlJudgement(models.Model):
+    player = models.ForeignKey(Player, help_text=u'Player who judged the result')
+    query = models.CharField(max_length=1024, help_text=u'Query text')
+    url = models.CharField(max_length=1024, help_text=u'Document URL')
+    time = models.DateTimeField(auto_now_add=True, help_text=u'Time when user '
+        'judged serp')
+    missing_terms = models.CharField(max_length=1024,
+        blank=True, null=True, help_text=u'List of term indexes which are '
+        'missing from the results')
+    misinterpreted_terms = models.CharField(max_length=1024,
+        blank=True, null=True, help_text=u'List of term indexes which are '
+        'misinterpreted in the results')
+    missing_relations = models.CharField(max_length=1024,
+        blank=True, null=True, help_text=u'List of term indexes relations '
+        'between which are missing in the results')
+    extra = models.CharField(max_length=512, blank=True, null=True, 
+        help_text=u'Extra information on the problem with the query')
 
 
 class QueryDifficulty(models.Model):

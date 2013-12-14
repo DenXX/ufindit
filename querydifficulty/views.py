@@ -12,7 +12,8 @@ from django.views.generic.list import ListView
 
 from ufindit.logger import EventLogger
 from ufindit.models import Player, PlayerTask, Serp, Game, PlayerGame
-from querydifficulty.models import QueryUrlProblem, QueryDifficulty, Survey
+from ufindit.search_proxy import SearchProxy
+from querydifficulty.models import *
 
 import settings
 
@@ -108,3 +109,31 @@ def query_url_problems_view(request, game_id=None):
         context['qu_problems'] = QueryUrlProblem.objects.all()
     context['games'] = Game.objects.all()
     return render(request, 'qud_admin.html', context)
+
+
+@login_required
+def query_url_judgement_view(request):
+    player, _ = Player.objects.get_or_create(user=request.user)
+    if request.method == "POST":
+        pass
+    context = {}
+    qups = QueryUrlProblem.objects.all()
+    to_judge = None
+    for qup in qups:
+        if QueryUrlJudgement.objects.filter(query=qup.serp.query).filter(url=qup.url).count() == 0:
+            to_judge = qup
+    context['to_judge'] = to_judge
+    query = to_judge.serp.query
+    from nltk.tokenize.punkt import PunktWordTokenizer
+    from nltk.corpus import stopwords
+    tokenizer = PunktWordTokenizer()
+    context['query'] = query
+    context['query_terms'] = [term for term in tokenizer.tokenize(query.lower()) \
+        if (len(term) > 1 or term.isalpha()) and term not in stopwords.words('english')]
+    search_proxy = SearchProxy(settings.SEARCH_PROXY)
+    search_results = search_proxy.search(player, query)
+    for doc in search_results:
+        if doc.safe_url == to_judge.url:
+            context['result'] = doc
+
+    return render(request, 'qud_judgement.html', context)

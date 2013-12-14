@@ -38,4 +38,8 @@ urlpatterns = patterns('',
         name='query_difficulty_admin'),
     url(r'^qud/(?P<game_id>[0-9]+)/$', 'querydifficulty.views.query_url_problems_view',
         name='query_difficulty_game_admin'),
+
+    # Judgememt
+    url(r'qud/judge/', 'querydifficulty.views.query_url_judgement_view',
+        name='query_url_judgement')
 )

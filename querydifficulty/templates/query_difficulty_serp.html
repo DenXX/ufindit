@@ -40,53 +40,8 @@
 {% endblock %}
 
 {% block pager %}
-  {# URL problem panel : BEGIN #}
-  <form method="POST" id="queryUrlProblemForm">
-    <input type="hidden" name="serpid" value="{{ serpid }}">
-    <input type="hidden" name="rank" value="{{ results.start_index }}" />
-    <input type="hidden" name="url" value="{{ results.0.safe_url }}" />
-    <small>
-    <div class="panel panel-default">
-      <div class="panel-heading">Don't like this result? Why?</div>
-       
-      <table class="table" style="width: auto; text-align: center;">
-      <tr><th style="padding: 4px">&nbsp;</th>
-        {% for term in query_terms %}<th style="padding: 4px">{{ term }}</th> {% endfor %}
-      </tr>
-      <tr>
-        <td style="padding: 4px" class="text-right">Missing topic</td>
-        {% for term in query_terms %}
-          <td style="padding: 4px">
-            <input type="checkbox" name="missing[]" value="{{term}}">
-          </td>
-        {% endfor %}
-      </tr>
-      <tr>
-        <td style="padding: 4px" class="text-right">Misinterpreted keyword</td>
-        {% for term in query_terms %}
-          <td style="padding: 4px">
-            <input type="checkbox" name="misinterpreted[]" value="{{ term }}">
-          </td>
-        {% endfor %}
-      </tr>
-      <tr>
-        <td style="padding: 4px" class="text-right">Missing relation between topics</td>
-        {% for term in query_terms %}
-          <td style="padding: 4px">
-            <input type="checkbox" name="missing_relation[]" value="{{ term }}">
-          </td>
-        {% endfor %}
-      </tr>
-      </table>
+  {% include 'qud_form.html' %}
 
-      <div class="panel-body form-group">
-        <label class="sr-only" for="extra">Other problem</label>
-        <input type="text" class="form-control" name="extra" id="extra" placeholder="Other problem?">
-      </div>
-    </div>
-  </small>
-  </form>
-  {# URL problem panel : END #}
   <div id="fillFormAlert" class="alert alert-danger hide">If you don't like this result please specify why...</div>
   <a class="btn btn-sm btn-info pager_button" href="{% if results.has_next %}?q={{query}}&page={{ results.next_page_number }}{% else %}?q={{query}}&page=1{% endif %}">Next result &raquo;</a> Result {{ results.start_index }} of {{ pages_number }}
 {% endblock %}
