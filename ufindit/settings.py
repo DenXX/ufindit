@@ -127,6 +127,7 @@ WSGI_APPLICATION = 'ufindit.wsgi.application'
 TEMPLATE_DIRS = (
     "/home/dsavenk/Projects/irlab/ufindit/ufindit/templates",
     "/home/dsavenk/Projects/irlab/ufindit/querydifficulty/templates",
+    "/home/dsavenk/Projects/irlab/ufindit/query_url_problems/templates",
     "/home/dsavenk/Projects/irlab/ufindit/analytics/templates",
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
@@ -144,6 +145,7 @@ INSTALLED_APPS = (
     'ufindit',
     'analytics',
     'querydifficulty',
+    'query_url_problems',
 )
 
 AUTHENTICATION_BACKENDS = (

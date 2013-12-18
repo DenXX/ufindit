@@ -20,6 +20,7 @@ from ufindit.forms import RegistrationForm
 from ufindit.logger import EventLogger
 from ufindit.models import Game, Player, PlayerGame, PlayerTask, Serp
 from ufindit.mturk import MTurkUser
+from ufindit.utils import get_query_terms
 
 import settings
 
@@ -58,14 +59,10 @@ def search(request, task_id, template='serp.html'):
     player = Player.objects.get(user=request.user)
     player_task = get_object_or_404(PlayerTask, id=task_id)
     if 'q' in request.GET and request.GET['q'].strip() != '':
-        from nltk.tokenize.punkt import PunktWordTokenizer
-        from nltk.corpus import stopwords
-        tokenizer = PunktWordTokenizer()
         query = unquote(request.GET['q']).decode('utf8')
         search_proxy = SearchProxy(settings.SEARCH_PROXY)
         context['query'] = query
-        context['query_terms'] = [term for term in tokenizer.tokenize(query.lower()) \
-            if (len(term) > 1 or term.isalpha()) and term not in stopwords.words('english')]
+        context['query_terms'] = get_query_terms(query)
         search_results = search_proxy.search(player, query)
         context['serpid'] = search_results.id
         # Log query event

@@ -39,8 +39,8 @@ urlpatterns = patterns('',
         {'template_name': 'reset_complete.html'}, name='password_reset_complete'),
 
     # Proxy
-    url(r'^http/play/(?P<url>.+)$', HttpProxy.as_view(
-        view_name='play_http_proxy', mode='play',
+    url(r'^http/play/(?P<url>.*)$', HttpProxy.as_view(
+        view_name='play_http_proxy', mode='playrecord',
         user_agent=settings.PROXY_USER_AGENT), name='play_http_proxy'),
     url(r'^(?P<task_id>[0-9]+)/http/(?P<url>.*)$', HttpProxy.as_view(
         view_name='http_proxy', mode='playrecord',
@@ -68,6 +68,10 @@ urlpatterns = patterns('',
     # Query difficulty URLs
     (r'^qdiff/', include('querydifficulty.urls', app_name='querydifficulty',
         namespace='querydifficulty')),
+
+    # Query Url Judgements URLs
+    (r'qu/', include('query_url_problems.urls', app_name='query_url_problems',
+        namespace='query_url_problems')),
 
     # Analytics
     url(r'^data/', include('analytics.urls', app_name='analytics',

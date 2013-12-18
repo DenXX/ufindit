@@ -2,7 +2,7 @@ import base64
 from django import forms
 from django.db import models
 from django.contrib.auth.models import User
-
+import pickle
 
 class Player(models.Model):
     user = models.OneToOneField(User)
@@ -120,6 +120,13 @@ class Serp(models.Model):
         return base64.decodestring(self._results)
 
     results = property(get_results, set_results)
+
+    def get_result_by_url(self, url):
+        results = pickle.loads(self.get_results())
+        for result in results:
+            if result.url == url:
+                return result
+        return None
 
     def __unicode__(self):
         return self.query
