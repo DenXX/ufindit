@@ -128,6 +128,15 @@ class Serp(models.Model):
                 return result
         return None
 
+    def get_results_urls(self):
+	urls = []
+	results = pickle.loads(self.get_results())
+        for res in results:
+	    urls.append(res.safe_url)
+        return "\n".join(urls)
+    
+    results_urls = property(get_results_urls)
+
     def __unicode__(self):
         return self.query
 

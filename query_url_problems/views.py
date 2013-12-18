@@ -55,10 +55,12 @@ class QueryUrlJudgementView(View):
     def get_context(self, request):
         self.player = self.get_player(request)
         judgement = self.get_next_query_url()
+	games = Game.objects.all()
         if not judgement:
-            return {}
+            return {'games': games}
         return {'judgement': judgement, 'query_terms': get_query_terms(judgement.serp.query),
-            'result': judgement.serp.get_result_by_url(judgement.url.strip().replace('http/', 'http://'))}
+            'result':judgement.serp.get_result_by_url(judgement.url.strip().replace('http/', 'http://').replace('https/', 'https://')),
+            'games': games}
 
     def get(self, request, **kwargs):
         return render(request, self.template_name, self.get_context(request))

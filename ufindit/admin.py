@@ -19,11 +19,14 @@ class PlayerGameAdmin(admin.ModelAdmin):
     readonly_fields = ('start',)
     list_filter = ('finish',)
 
+class SerpAdmin(admin.ModelAdmin):
+    readonly_fields = ('results_urls', )
+
 admin.site.register(Game)
 admin.site.register(Task, TaskAdmin)
 admin.site.register(Player)
 admin.site.register(PlayerGame, PlayerGameAdmin)
 admin.site.register(PlayerTask, PlayerTaskAdmin)
 admin.site.register(Event)
-admin.site.register(Serp)
+admin.site.register(Serp, SerpAdmin)
 admin.site.register(UserSerpResultsOrder)
