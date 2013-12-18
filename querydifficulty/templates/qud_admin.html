@@ -19,7 +19,7 @@
               {% regroup query.list by url as url_list %}
               {% for url_problem in url_list %}
                 <li><a href="{% url 'play_http_proxy' url=url_problem.grouper %}">{{ url_problem.grouper }}</a>
-                    <ul>
+                    <ol>
                       {% for qup in url_problem.list %}
                         <li>
                           {% if qup.missing_terms %} Missing topic: {{ qup.missing_terms }}<br />{% endif %}
@@ -28,7 +28,7 @@
                           {% if qup.extra %} Other: {{ qup.extra }}<br /> {% endif %}
                         </li>
                       {% endfor %}
-                    </ul>
+                    </ol>
                 </li>
               {% endfor %}
           </ul>
