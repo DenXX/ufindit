@@ -58,7 +58,7 @@ class QueryUrlJudgementView(View):
         if not judgement:
             return {}
         return {'judgement': judgement, 'query_terms': get_query_terms(judgement.serp.query),
-            'result': judgement.serp.get_result_by_url(judgement.url)}
+            'result': judgement.serp.get_result_by_url(judgement.url.strip().replace('http/', 'http://'))}
 
     def get(self, request, **kwargs):
         return render(request, self.template_name, self.get_context(request))
