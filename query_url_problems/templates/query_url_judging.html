@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block head_css %}
+    <link href="/static/css/serp.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <br />
+    {% if not judgement %}
+    <h1>No more query-urls to judge <small>Thank you!</small></h1>
+    {% else %}
+    <div class="well">
+        <strong>Question</strong>: {{ judgement.task.text }}
+        <br /><br />
+        <strong>Query</strong>: {{ judgement.serp.query }}
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <ol class="search-results" start="{{ result.rank }}">
+                {% url 'play_http_proxy' url=result.safe_url as result_link %}
+                {% include 'search_result_snippet.html' %}
+            </ol>
+            {# URL problem panel : BEGIN #}
+            <form method="POST" id="queryUrlProblemForm">
+                {% csrf_token %}
+                <input type="hidden" name="qujid" value="{{ judgement.id }}" />
+            <small>
+                <div class="panel panel-default">
+                  <div class="panel-heading">Is this result relevant? Why not?</div>
+                  <div class="checkbox" style="margin:5px;">
+                    <label>
+                      <input type="checkbox" name="relevant" id="relevant"> This result is relevant
+                    </label>
+                  </div>
+                  <table class="table" style="width: auto; text-align: center; margin:5px;">
+                  <tr><th style="padding: 4px">&nbsp;</th>
+                    {% for term in query_terms %}<th style="padding: 4px">{{ term }}</th> {% endfor %}
+                  </tr>
+                  <tr>
+                    <td style="padding: 4px" class="text-right">Missing topic</td>
+                    {% for term in query_terms %}
+                      <td style="padding: 4px">
+                        <input type="checkbox" name="missing[]" value="{{term}}">
+                      </td>
+                    {% endfor %}
+                  </tr>
+                  <tr>
+                    <td style="padding: 4px" class="text-right">Misinterpreted keyword</td>
+                    {% for term in query_terms %}
+                      <td style="padding: 4px">
+                        <input type="checkbox" name="misinterpreted[]" value="{{ term }}">
+                      </td>
+                    {% endfor %}
+                  </tr>
+                  <tr>
+                    <td style="padding: 4px" class="text-right">Missing relation between topics</td>
+                    {% for term in query_terms %}
+                      <td style="padding: 4px">
+                        <input type="checkbox" name="missing_relation[]" value="{{ term }}">
+                      </td>
+                    {% endfor %}
+                  </tr>
+                  </table>
+                  <div class="panel-body form-group">
+                    <label class="sr-only" for="extra">Something else is missing</label>
+                    <input type="text" class="form-control" name="other_missing" id="other_missing" placeholder="Something else is missing">
+                    <br />
+                    <label class="sr-only" for="extra">Other problem</label>
+                    <input type="text" class="form-control" name="other_problem" id="other_problem" placeholder="Other problem?">
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-success">Save</button>
+            </small>
+            </form>
+            {# URL problem panel : END #}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

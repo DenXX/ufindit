@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <h2>Query-Document judgement<small>&nbsp;</small></h2>
+  <hr />
+<div class="panel panel-default">
+  <div class="panel-body">
+    {% for game in games %} <a href="{% url 'querydifficulty:query_difficulty_game_admin' game_id=game.id %}">{{ game.name }}</a> | {% endfor %}
+  </div>
+</div>
+  
+  <div class="row"><div class="col-md-8">
+
+  <ol class="search-results" start="{{ result.rank }}">
+    <li>
+        <div class="nospace"><h3 class="nospace"><a href="{% url 'play_http_proxy' url=result.safe_url %}" class="nospace" target="blank">{{ result.title|safe }}</a></h3></div>
+        <div class="nospace"><cite class="search-results-link">{{ result.display_url|safe }}</cite></div>
+        <p>{{ result.snippet|safe }}</p>
+    </li>
+  </ol>
+
+  <form method="POST" id="queryUrlProblemForm">
+    <input type="hidden" name="serpid" value="{{ serpid }}">
+    <input type="hidden" name="rank" value="{{ results.start_index }}" />
+    <input type="hidden" name="url" value="{{ results.0.safe_url }}" />
+    <small>
+    <div class="panel panel-default">
+      <div class="panel-heading">Don't like this result? Why?</div>
+       
+      <table class="table" style="width: auto; text-align: center;">
+      <tr><th style="padding: 4px">&nbsp;</th>
+        {% for term in query_terms %}<th style="padding: 4px">{{ term }}</th> {% endfor %}
+      </tr>
+      <tr>
+        <td style="padding: 4px" class="text-right">Missing topic</td>
+        {% for term in query_terms %}
+          <td style="padding: 4px">
+            <input type="checkbox" name="missing[]" value="{{term}}">
+          </td>
+        {% endfor %}
+      </tr>
+      <tr>
+        <td style="padding: 4px" class="text-right">Misinterpreted keyword</td>
+        {% for term in query_terms %}
+          <td style="padding: 4px">
+            <input type="checkbox" name="misinterpreted[]" value="{{ term }}">
+          </td>
+        {% endfor %}
+      </tr>
+      <tr>
+        <td style="padding: 4px" class="text-right">Missing relation between topics</td>
+        {% for term in query_terms %}
+          <td style="padding: 4px">
+            <input type="checkbox" name="missing_relation[]" value="{{ term }}">
+          </td>
+        {% endfor %}
+      </tr>
+      </table>
+
+      <div class="panel-body form-group">
+        <label class="sr-only" for="extra">Other problem</label>
+        <input type="text" class="form-control" name="extra" id="extra" placeholder="Other problem?">
+      </div>
+    </div>
+  </small>
+  </form>
+  </div></div>
+</div>
+{% endblock %}
+
