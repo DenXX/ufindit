@@ -44,7 +44,7 @@ class QueryUrlJudgementView(View):
             player, _ = Player.objects.get_or_create(user=request.user)
             return player
         if 'workerId' not in request.GET:
-            return HttpResponseRedirect(reverse('login'))
+            raise Http404()
         workerId = request.GET['workerId']
         # hitId = request.GET['hitId']
         # assignmentId = request.GET['assignmentId']
@@ -55,7 +55,7 @@ class QueryUrlJudgementView(View):
     def get_context(self, request):
         self.player = self.get_player(request)
         judgement = self.get_next_query_url()
-	games = Game.objects.all()
+        games = Game.objects.all()
         if not judgement:
             return {'games': games}
         return {'judgement': judgement, 'query_terms': get_query_terms(judgement.serp.query),
@@ -63,7 +63,10 @@ class QueryUrlJudgementView(View):
             'games': games}
 
     def get(self, request, **kwargs):
-        return render(request, self.template_name, self.get_context(request))
+        try:
+            return render(request, self.template_name, self.get_context(request))
+        except Http404:
+            return HttpResponseRedirect(reverse('login'))
 
     def post(self, request, **kwargs):
         judgement = get_object_or_404(QueryUrlJudgement, id=request.POST['qujid'])
@@ -95,4 +98,7 @@ class QueryUrlJudgementView(View):
             judgement.other_reason = other_problem
             judgement.save()
 
-        return render(request, self.template_name, self.get_context(request))
+        try:
+            return render(request, self.template_name, self.get_context(request))
+        except Http404:
+            return HttpResponseRedirect(reverse('login'))
