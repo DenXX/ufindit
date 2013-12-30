@@ -7,7 +7,9 @@
 {% block content %}
 <div class="container">
     <br />
+    {% if not mturk %}
     <div class="well">{% for game in games %}<a href="{% url 'query_url_problems:query_url_judgement' game_id=game.id %}">{{ game.name }}</a>&nbsp;&nbsp;{% endfor %}</div>
+    {% endif %}
     <br />
     {% if not judgement %}
     <h1>No more query-urls to judge <small>Thank you!</small></h1>

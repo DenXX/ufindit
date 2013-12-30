@@ -33,4 +33,9 @@ class QueryUrlJudgement(models.Model):
     other_reason = models.CharField(max_length=1024, blank=True, null=True, 
         help_text=u'Some other problem')
 
-    
+
+class QueryUrlJudgementAssignment(models.Model):
+    player = models.ForeignKey(Player, help_text=u'Player for this assignment')
+    mturk_assignment_id = models.CharField(max_length=255, blank=True, null=True,
+        help_text=u'MTurk AssignmentID')
+    judgements = models.ManyToManyField(QueryUrlJudgement, help_text=u'Judgements')
