@@ -196,6 +196,8 @@ class GameSurvey(models.Model):
         '(from -2..2)')
     difficult = models.IntegerField(help_text=u'How difficult the game was '
         '(from -2..2)')
+    hints_useful = models.IntegerField(help_text=u'If we showed search hints were '
+        'they useful', null=True)
     comments = models.TextField(blank=True, null=True, help_text=u'User '
         'comments on the game')
 
