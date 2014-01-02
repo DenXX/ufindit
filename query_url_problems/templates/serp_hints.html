@@ -1,0 +1,18 @@
+{% extends 'serp.html' %}
+
+{% block serp_right_panel %}
+    {% if search_hints %}
+        <div class="panel panel-info">
+            <div class="panel-heading">Cannot find the answer?</div>
+            <div class="panel-body">
+                <small>
+                <ul style="padding: 5px">
+                {% for hint in search_hints %}
+                <li style="padding-bottom: 5px">{{ hint|safe }}</li>
+                {% endfor %}
+                </ul>
+                </small>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
