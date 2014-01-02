@@ -181,3 +181,21 @@ class Event(models.Model):
 
     class Meta:
         ordering = ['player_task', 'time']
+
+class GameSurvey(models.Model):
+    """
+        Survey at the end of the game
+    """
+    player_game = models.ForeignKey(PlayerGame)
+    liked = models.IntegerField(help_text=u'How did user like the game '
+        '(from -2..2)')
+    repeat = models.IntegerField(help_text=u'How likely will user play again '
+        '(from -2..2)')
+    difficult = models.IntegerField(help_text=u'How difficult the game was '
+        '(from -2..2)')
+    comments = models.TextField(blank=True, null=True, help_text=u'User '
+        'comments on the game')
+
+
+    def __unicode__(self):
+        return u'Survey: ' + unicode(self.player_game)

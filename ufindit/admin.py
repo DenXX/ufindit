@@ -1,7 +1,7 @@
 
 from django import forms
 from django.contrib import admin
-from ufindit.models import Game, Task, Player, PlayerGame, PlayerTask, Event, Serp, UserSerpResultsOrder
+from ufindit.models import *
 
 class TaskAdminForm(forms.ModelForm):
     text = forms.CharField(widget=forms.Textarea)
@@ -30,3 +30,4 @@ admin.site.register(PlayerTask, PlayerTaskAdmin)
 admin.site.register(Event)
 admin.site.register(Serp, SerpAdmin)
 admin.site.register(UserSerpResultsOrder)
+admin.site.register(GameSurvey)

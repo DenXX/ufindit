@@ -17,7 +17,7 @@
     {% endif %}
 
     <ol>
-    <form action="{% url 'querydifficulty:submit_survey_view' game_id=game.id %}" method="POST" class="form-horizontal" role="form">
+    <form method="POST" class="form-horizontal" role="form">
       {% csrf_token %}
       {# How did you like the game #}
       <div class="form-group">
@@ -114,56 +114,6 @@
             Extremely difficult
         </div>
         </li>
-      </div>
-
-      <div class="form-group">
-        <li>
-        <label class="control-label">* How distracting was it to have to answer questions about search result quality?</label><br />
-        <div class="radio">
-          <label>
-            <input type="radio" name="distract" id="optionsRadios1" value="-1">
-            Like it, questions even helped me to reformulate my query
-          </label>
-        </div>
-        <div class="radio">
-          <label>
-            <input type="radio" name="distract" id="optionsRadios1" value="0">
-            It was ok
-        </div>
-        <div class="radio">
-          <label>
-            <input type="radio" name="distract" id="optionsRadios1" value="1">
-            Extremely distracting
-        </div>
-        </li>
-      </div>
-
-      <div class="form-group">
-        <li>
-        <label class="control-label">* How difficult was it to answer questions about search result quality?</label><br />
-        <div class="radio">
-          <label>
-            <input type="radio" name="query_easy" id="optionsRadios1" value="-1">
-            I was able to choose an answer easily
-          </label>
-        </div>
-        <div class="radio">
-          <label>
-            <input type="radio" name="query_easy" id="optionsRadios1" value="0">
-            Sometimes had to think a little bit, but on average it was ok
-        </div>
-        <div class="radio">
-          <label>
-            <input type="radio" name="query_easy" id="optionsRadios1" value="0">
-            Very hard, couldn't find a good answer
-        </div>
-        </li>
-      </div>
-      <div class="form-group">
-          <label for="qdiff_feedback" class="control-label">
-            Please comment on your experience answering questions on individual results quality:
-          </label>
-          <textarea rows="3" name="qdiff_feedback" class="form-control"></textarea>
       </div>
       <hr />
       <div class="form-group">
