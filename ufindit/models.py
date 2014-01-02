@@ -60,6 +60,9 @@ class PlayerGame(models.Model):
         help_text=u'AssignmentID if this game is played through MTurk')
     score = models.PositiveIntegerField(default=0, help_text=u'User score in the '
         'game, can be the number of correct answers or something different')
+    extra_flags = models.CharField(max_length=255, blank=True, null=True,
+        help_text=u'Extra flags which can be used to give different players '
+        'different hints/questions/etc for testing')
 
     def save(self, *args, **kwargs):
         created = not self.pk

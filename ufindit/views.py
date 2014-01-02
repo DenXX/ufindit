@@ -22,6 +22,8 @@ from ufindit.models import Game, Player, PlayerGame, PlayerTask, Serp
 from ufindit.mturk import MTurkUser
 from ufindit.utils import get_query_terms
 
+from query_url_problems.models import QueryUrlJudgement
+
 import settings
 
 def index(request):
@@ -84,6 +86,11 @@ def search(request, task_id, template='serp.html'):
         context['pages_number'] = paginator.num_pages
         # Log query event
         EventLogger.query(player_task, query, serp, context['results'].number)
+
+        if player_task.player_game.extra_flags and player_task.player_game.extra_flags != "0":
+            from query_url_problems.utils import get_search_hints
+            context['search_hints'] = get_search_hints(serp, player_task.player_game.extra_flags == "2")
+
     context['enable_emu'] = settings.ENABLE_EMU_LOGGING
     return render(request, template, context)
 
@@ -121,6 +128,11 @@ class GameView(View):
 
     def game_over(self, request, player_game):
         context = {'message':'', 'game':player_game.game}
+        if player_game.assignmentId:
+            return HttpResponseRedirect(settings.MTURK_TASK_SUBMIT_URL +
+                urlencode(dict(
+                    assignmentId=player_game.assignmentId,
+                    sb='submit HIT')))
         return render(request, self.game_over_template, context)
 
 
@@ -212,8 +224,13 @@ class RulesView(View):
     def get(self, request, game_id):
         game = get_object_or_404(Game, id=game_id, active=True)
         player, _ = Player.objects.get_or_create(user=request.user)
+
         player_game, created = PlayerGame.objects.get_or_create(player=player,
             game=game)
+
+        player_game.extra_flags= str(len(game.playergame_set.all()) % 3)
+        player_game.save()
+
         if player_game.rules_accepted:
             return HttpResponseRedirect(reverse('game',
                 kwargs={'game_id': game_id}))

@@ -197,12 +197,13 @@ EMAIL_USE_TLS = True
 
 SEARCH_PROXY = "bing"
 RESULTS_PER_PAGE = 10
-RANDOMIZE_TOPN_RESULTS = 20
+RANDOMIZE_TOPN_RESULTS = 0
 
 # Which SERP template to use, we can add extra html code by switching templates.
 # SERP_TEMPLATE_NAME = 'query_difficulty_serp.html'
 # GAME_OVER_TEMPLATE = 'survey.html'
-SERP_TEMPLATE_NAME = 'serp.html'
+# SERP_TEMPLATE_NAME = 'serp.html'
+SERP_TEMPLATE_NAME = 'serp_hints.html'
 GAME_OVER_TEMPLATE = 'game_over.html'
 RULES_TEMPLATE_NAME = 'rules.html'
 
@@ -219,11 +220,11 @@ MTURK_FRAME_HEIGHT=1200
 MTURK_USONLY_REQUIREMENT=True
 MTURK_HIT_LIFETIME_HOURS=72
 MTURK_HIT_DURATION=1.0
-MTURK_MAX_ASSIGNMENTS=20
-MTURK_HIT_REWARD=2
+MTURK_MAX_ASSIGNMENTS=30
+MTURK_HIT_REWARD=1.5
 MTURK_APPROVAL_DELAY=48
 MTURK_APPROVED_PERCENT_REQUIREMENT=90
-MTURK_MASTERS_REQUIREMENT=True
+MTURK_MASTERS_REQUIREMENT=False
 MTURK_GAME_TITLE = 'uFindIt Web Search Game 5'
 MTURK_GAME_DESCRIPTION = 'The goal of the game is to use web search to find answers ' + \
                          'to 4 questions. Please read this if hit is not displayed ' + \
