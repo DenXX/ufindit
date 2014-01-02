@@ -215,7 +215,10 @@ AWS_ACCESS_KEY='1MR3K9YRD0HAV38G9B02' #'AKIAIDK22GOAOQQPMQTQ'
 AWS_SECRET_ACCESS_KEY='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' #'wT4yL5RoGTd6ELx1ThM7w+xmQBx5TIj+hyeIm+De'
 MTURK_REST_SANDBOX_ENDPOINT='mechanicalturk.sandbox.amazonaws.com'
 MTURK_REST_ENDPOINT='mechanicalturk.amazonaws.com'
-MTURK_TASK_SUBMIT_URL= 'http://www.mturk.com/mturk/externalSubmit?' #'http://workersandbox.mturk.com/mturk/externalSubmit?'
+
+MTURK_TASK_SUBMIT_URL= 'http://workersandbox.mturk.com/mturk/externalSubmit?'
+# MTURK_TASK_SUBMIT_URL= 'http://www.mturk.com/mturk/externalSubmit?'
+
 MTURK_FRAME_HEIGHT=1200
 MTURK_USONLY_REQUIREMENT=True
 MTURK_HIT_LIFETIME_HOURS=72
