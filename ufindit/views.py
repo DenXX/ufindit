@@ -18,7 +18,7 @@ from django.views.generic.base import View
 from httpproxy.views import HttpProxy
 from ufindit.forms import RegistrationForm
 from ufindit.logger import EventLogger
-from ufindit.models import Game, Player, PlayerGame, PlayerTask, Serp
+from ufindit.models import Game, Player, PlayerGame, PlayerTask, Serp, GameSurvey
 from ufindit.mturk import MTurkUser
 from ufindit.utils import get_query_terms
 
@@ -123,8 +123,22 @@ class GameView(View):
         if not player_game.finish:
             player_game.finish = now()
             player_game.save()
-        return HttpResponseRedirect(reverse('game_over',
-            kwargs={'game_id':player_game.game.id}))
+
+        if request.method == 'POST':
+            fields = ['like', 'again', 'easy']
+            for field in fields:
+                if field not in request.POST:
+                    return render(request, 'survey.html', {'errors': True})
+
+            survey = GameSurvey(player_game=player_game, liked=request.POST['like'],
+                repeat=request.POST['again'], difficult=request.POST['easy'],
+                comments=request.POST['feedback'] if 'feedback' in request.POST else '')
+            survey.save()
+            
+            return HttpResponseRedirect(reverse('game_over',
+                kwargs={'game_id':player_game.game.id}))
+
+        return render(request, 'survey.html', {})
 
     def game_over(self, request, player_game):
         context = {'message':'', 'game':player_game.game}
