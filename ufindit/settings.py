@@ -228,9 +228,9 @@ MTURK_HIT_REWARD=1.5
 MTURK_APPROVAL_DELAY=48
 MTURK_APPROVED_PERCENT_REQUIREMENT=90
 MTURK_MASTERS_REQUIREMENT=True
-MTURK_GAME_TITLE = 'uFindIt Web Search Game 5'
+MTURK_GAME_TITLE = 'uFindIt Web Search Game'
 MTURK_GAME_DESCRIPTION = 'The goal of the game is to use web search to find answers ' + \
-                         'to 4 questions. Please read this if hit is not displayed ' + \
+                         'to 7 questions. Please read this if hit is not displayed ' + \
                          'http://mturkforum.com/showthread.php?10046-problem-with-hits'
 
 # EMU settings
