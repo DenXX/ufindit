@@ -215,8 +215,8 @@ AWS_SECRET_ACCESS_KEY='6h4E8/YIbZ4ED3orCWrn4Jjznkgw6kFtLvvzhCEw' #'wT4yL5RoGTd6E
 MTURK_REST_SANDBOX_ENDPOINT='mechanicalturk.sandbox.amazonaws.com'
 MTURK_REST_ENDPOINT='mechanicalturk.amazonaws.com'
 
-MTURK_TASK_SUBMIT_URL= 'http://workersandbox.mturk.com/mturk/externalSubmit?'
-# MTURK_TASK_SUBMIT_URL= 'http://www.mturk.com/mturk/externalSubmit?'
+# MTURK_TASK_SUBMIT_URL= 'http://workersandbox.mturk.com/mturk/externalSubmit?'
+MTURK_TASK_SUBMIT_URL= 'http://www.mturk.com/mturk/externalSubmit?'
 
 MTURK_FRAME_HEIGHT=1200
 MTURK_USONLY_REQUIREMENT=True
@@ -226,10 +226,10 @@ MTURK_MAX_ASSIGNMENTS=20
 MTURK_HIT_REWARD=2
 MTURK_APPROVAL_DELAY=48
 MTURK_APPROVED_PERCENT_REQUIREMENT=90
-MTURK_MASTERS_REQUIREMENT=False
+MTURK_MASTERS_REQUIREMENT=True
 MTURK_GAME_TITLE = 'uFindIt Web Search Game'
 MTURK_GAME_DESCRIPTION = 'The goal of the game is to use web search to find answers ' + \
-                         'to 4 questions. Please read this if hit is not displayed ' + \
+                         'to 5 questions. Please read this if hit is not displayed ' + \
                          'http://mturkforum.com/showthread.php?10046-problem-with-hits'
 
 # EMU settings
