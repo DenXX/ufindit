@@ -197,7 +197,7 @@ EMAIL_USE_TLS = True
 
 SEARCH_PROXY = "bing"
 RESULTS_PER_PAGE = 10
-RANDOMIZE_TOPN_RESULTS = 20
+RANDOMIZE_TOPN_RESULTS = 0
 
 # Which SERP template to use, we can add extra html code by switching templates.
 # SERP_TEMPLATE_NAME = 'query_difficulty_serp.html'

@@ -133,8 +133,13 @@ class GameView(View):
 
         return render(request, 'survey.html', {})
 
-    def game_over(self, request, player_game):
+     def game_over(self, request, player_game):
         context = {'message':'', 'game':player_game.game}
+        if player_game.assignmentId:
+            return HttpResponseRedirect(settings.MTURK_TASK_SUBMIT_URL +
+                urlencode(dict(
+                    assignmentId=player_game.assignmentId,
+                    sb='submit HIT')))
         return render(request, self.game_over_template, context)
 
 
