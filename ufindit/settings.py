@@ -198,6 +198,9 @@ EMAIL_USE_TLS = True
 SEARCH_PROXY = "bing"
 RESULTS_PER_PAGE = 10
 RANDOMIZE_TOPN_RESULTS = 0
+FILTER_URLS = ['seoflexforum.com', 'chacha.com', 'facebook.com', 'answers.yahoo.com',
+               'tipnews.info', 'wiki.answers.com']
+FILTER_URLS_IF_CONTAIN_QUESTION = True
 
 # Which SERP template to use, we can add extra html code by switching templates.
 # SERP_TEMPLATE_NAME = 'query_difficulty_serp.html'

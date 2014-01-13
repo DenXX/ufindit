@@ -1,7 +1,7 @@
 """
     This module implements search providers returning a set of search
     results for a query. You can create an instance of SearchProxy
-    object passing the name of search to use and call its search(player, query)
+    object passing the name of search to use and call its search(player, question, query)
     method to get search results.
 
     Author: Denis Savenkov (dsavenk@emory.edu)
@@ -22,6 +22,7 @@ import urllib
 import urllib2
 
 from ufindit.models import Serp, UserSerpResultsOrder
+from ufindit.utils import get_tokens
 
 # Python 2.6 has json built in, 2.5 needs simplejson
 try:
@@ -34,11 +35,13 @@ class SearchResult:
     """
         Represents one web search result
     """
-    def __init__(self, url, display_url, title, snippet):
+    def __init__(self, url, display_url, title, snippet, raw_title = None, raw_snippet = None):
         self._url = url
         self._display_url = display_url
         self._title = title
         self._snippet = snippet
+        self._raw_title = raw_title
+        self._raw_snippet = raw_snippet
 
     @property
     def url(self):
@@ -60,8 +63,19 @@ class SearchResult:
     def snippet(self):
         return self._snippet
 
+    @property
+    def raw_title(self):
+        return self._raw_title
+
+    @property
+    def raw_snippet(self):
+        return self._raw_snippet
+
     def __unicode__(self):
         return self.title + u'\n' + self.display_url + '\n' + self.snippet
+
+    def __repr__(self):
+        return unicode(self).encode('utf-8')
 
 
 class ResultsSet:
@@ -79,6 +93,10 @@ class ResultsSet:
         """
         assert isinstance(result, SearchResult)
         self.results.add(result)
+
+    def remove(self, result):
+        assert isinstance(result, SearchResult)
+        self.results.remove(result)
 
     def __iter__(self):
         """
@@ -102,13 +120,16 @@ class ResultsSet:
     def __getitem__(self, index):
         return self.results[index]
 
+    def __repr__(self):
+        return unicode(self).encode('utf-8')
+
 
 class SearchProvider:
     """
     Abstract class for all search providers.
     """
     @abstractmethod
-    def search(self, player, query):
+    def search(self, player, question, query):
         return None
 
     @abstractmethod
@@ -126,7 +147,7 @@ class BingSearchProvider(SearchProvider):
     def __init__(self, bing_api_key=settings.BING_API_KEY):
         self._api_key = bing_api_key
 
-    def search(self, player, query, verbose=False):
+    def search(self, player, question, query, verbose=False):
         BingSearchProvider._params["Query"] = "'" + query + "'"
         url = BingSearchProvider._api_url_template + \
             urllib.urlencode(BingSearchProvider._params)
@@ -145,15 +166,21 @@ class BingSearchProvider(SearchProvider):
             [SearchResult(self.clean(r["Url"]),
                           self.clean(r["DisplayUrl"]),
                           self.clean(r["Title"]),
-                          self.clean(r["Description"])) for r in results])
+                          self.clean(r["Description"]),
+                          self.clean(r["Title"], False),
+                          self.clean(r["Description"], False)) for r in results])
 
-    def clean(self, text):
+    def clean(self, text, html_highlight=True):
         """
         Replace some service chars sequences with more appropriate text. E.g.
         \ue000 with <strong>, etc.
         """
-        return text.replace(u'\ue000', u'<strong>'). \
-                    replace(u'\ue001', u'</strong>')
+        if html_highlight:
+            return text.replace(u'\ue000', u'<strong>'). \
+                        replace(u'\ue001', u'</strong>')
+        else:
+            return text.replace(u'\ue000', u'').replace(u'\ue001', u'')
+
 
     def __unicode__(self):
         """
@@ -170,7 +197,7 @@ class CacheSearchProvider(SearchProvider):
         assert isinstance(search_provider, SearchProvider)
         self._search_provider = search_provider
 
-    def search(self, player, query, verbose=False):
+    def search(self, player, question, query, verbose=False):
         """
         Checks cache for search results and calls underlining provider if fails.
         """
@@ -180,7 +207,7 @@ class CacheSearchProvider(SearchProvider):
         if len(results) == 0:
             if verbose:
                 print "Search cache miss"
-            results = self._search_provider.search(player, query)
+            results = self._search_provider.search(player, question, query)
             serp = Serp(query=query, engine=self._search_provider,
                 results=pickle.dumps(results))
             serp.save()
@@ -196,6 +223,33 @@ class CacheSearchProvider(SearchProvider):
     def __unicode__(self):
         return u'Cache'
 
+class FilterSearchProvider(SearchProvider):
+    """ Filters some urls which we don't want to show """
+    def __init__(self, search_provider):
+        self._search_provider = search_provider
+
+    def _filter(self, question, result):
+        for filter_url in settings.FILTER_URLS:
+            if result.url.find(filter_url) != -1:
+                return True
+        if settings.FILTER_URLS_IF_CONTAIN_QUESTION:
+            question_tokens = get_tokens(question)
+            result_tokens = set(get_tokens(result.raw_title) + get_tokens(result.raw_snippet))
+            count = 0
+            for qtoken in question_tokens:
+                if qtoken in result_tokens:
+                    count += 1
+            if 1.0 * count / len(question_tokens) > 0.8:
+                return True
+
+    def search(self, player, question, query, verbose=False):
+        results = self._search_provider.search(player, question, query)
+        for filter_url in settings.FILTER_URLS:
+            results.results = [res for res in results.results if not self._filter(question, res)]
+        return results
+
+    def __unicode__(self):
+        return u'Filter'
 
 class RandomizationSearchProvider(SearchProvider):
     """
@@ -207,8 +261,8 @@ class RandomizationSearchProvider(SearchProvider):
         self._search_provider = search_provider
         self._topn = topn
 
-    def search(self, player, query, verbose=False):
-        results = self._search_provider.search(player, query)
+    def search(self, player, question, query, verbose=False):
+        results = self._search_provider.search(player, question, query)
         serp = Serp.objects.get(id = results.id)
         try:
             results_order = UserSerpResultsOrder.objects.get(player=player, serp=serp)
@@ -259,8 +313,12 @@ class SearchProxy(SearchProvider):
         """
         if engine not in SearchProxy._engines:
             raise KeyError("No such engine found: " + engine)
+        
+        provider = SearchProxy._engines[engine]()
+        if len(settings.FILTER_URLS) > 0:
+            provider = FilterSearchProvider(provider)
         # Use caching
-        provider = CacheSearchProvider(SearchProxy._engines[engine]())
+        provider = CacheSearchProvider(provider)
         # Use randomization if setting is on
         if settings.RANDOMIZE_TOPN_RESULTS > 0:
             return RandomizationSearchProvider(provider, settings.RANDOMIZE_TOPN_RESULTS)
@@ -272,12 +330,12 @@ class SearchProxy(SearchProvider):
         """
         return re.sub('\s+', ' ', query).strip().lower()
 
-    def search(self, player, query):
+    def search(self, player, question, query):
         """
         Returns search results for the given query. Uses search engine specified
         when object was created.
         """
-        return self._search_provider.search(player, self._normalize_query(query))
+        return self._search_provider.search(player, question, self._normalize_query(query))
 
     def __unicode__(self):
         return "Proxy"
