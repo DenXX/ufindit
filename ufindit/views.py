@@ -20,7 +20,7 @@ from ufindit.forms import RegistrationForm
 from ufindit.logger import EventLogger
 from ufindit.models import Game, Player, PlayerGame, PlayerTask, Serp, GameSurvey
 from ufindit.mturk import MTurkUser
-from ufindit.utils import get_query_terms
+from ufindit.utils import get_tokens
 
 from query_url_problems.models import QueryUrlJudgement
 
@@ -64,8 +64,8 @@ def search(request, task_id, template='serp.html'):
         query = unquote(request.GET['q']).decode('utf8')
         search_proxy = SearchProxy(settings.SEARCH_PROXY)
         context['query'] = query
-        context['query_terms'] = get_query_terms(query)
-        search_results = search_proxy.search(player, query)
+        context['query_terms'] = get_tokens(query)
+        search_results = search_proxy.search(player, player_task.task.text, query)
         context['serpid'] = search_results.id
         # Log query event
         serp = get_object_or_404(Serp, id=search_results.id)

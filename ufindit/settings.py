@@ -198,6 +198,10 @@ EMAIL_USE_TLS = True
 SEARCH_PROXY = "bing"
 RESULTS_PER_PAGE = 10
 RANDOMIZE_TOPN_RESULTS = 0
+FILTER_URLS = ['seoflexforum.com', 'chacha.com', 'facebook.com', 'answers.yahoo.com',
+               'tipnews.info', 'wiki.answers.com']
+FILTER_URLS_IF_CONTAIN_QUESTION = True
+
 
 # Which SERP template to use, we can add extra html code by switching templates.
 # SERP_TEMPLATE_NAME = 'query_difficulty_serp.html'
@@ -230,7 +234,7 @@ MTURK_APPROVED_PERCENT_REQUIREMENT=90
 MTURK_MASTERS_REQUIREMENT=True
 MTURK_GAME_TITLE = 'uFindIt Web Search Game'
 MTURK_GAME_DESCRIPTION = 'The goal of the game is to use web search to find answers ' + \
-                         'to 7 questions. Please read this if hit is not displayed ' + \
+                         'to 5 questions. Please read this if hit is not displayed ' + \
                          'http://mturkforum.com/showthread.php?10046-problem-with-hits'
 
 # EMU settings

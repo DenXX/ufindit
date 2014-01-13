@@ -14,7 +14,7 @@ from django.views.generic.base import View
 from ufindit.models import Player, PlayerTask, Serp, Game, PlayerGame
 from ufindit.mturk import MTurkUser
 from ufindit.search_proxy import SearchProxy
-from ufindit.utils import get_query_terms
+from ufindit.utils import get_tokens
 
 from query_url_problems.models import *
 
@@ -85,7 +85,7 @@ class QueryUrlJudgementView(View):
         games = Game.objects.all()
         if not judgement:
             return {'games': games, 'mturk': self.mturk}
-        return {'judgement': judgement, 'query_terms': get_query_terms(judgement.serp.query),
+        return {'judgement': judgement, 'query_terms': get_tokens(judgement.serp.query),
             'result':judgement.serp.get_result_by_url(judgement.url.strip().replace('http/', 'http://').replace('https/', 'https://')),
             'games': games, 'mturk': self.mturk}
 
