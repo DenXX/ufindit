@@ -239,7 +239,7 @@ class FilterSearchProvider(SearchProvider):
             for qtoken in question_tokens:
                 if qtoken in result_tokens:
                     count += 1
-            if 1.0 * count / len(question_tokens) > 0.8:
+            if 1.0 * count / len(question_tokens) > 0.70:
                 return True
 
     def search(self, player, question, query, verbose=False):
