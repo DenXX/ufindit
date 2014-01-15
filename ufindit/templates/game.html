@@ -18,7 +18,7 @@
             {% csrf_token %}
             <div><button type="button" data-toggle="modal" data-target="#answerModal" class="btn btn-primary">Answer</button></div>
             <div>&nbsp;</div>
-            <div><button type="submit" name="skip" class="btn btn-default btn-sm">Skip</button></div>
+            <div><button type="button" data-toggle="modal" data-target="#skipModal" class="btn btn-default btn-sm">Skip</button></div>
           </form>
       </div>
       <div class="col-sm-2">
@@ -38,7 +38,7 @@
 {% endblock %}
 
 {% block content %}
-<form method="POST">
+<form method="POST" onsubmit="showAnswer()">
   {% csrf_token %}
   <div class="modal fade" id="answerModal" tabindex="-1" role="dialog" aria-labelledby="Answer" aria-hidden="true">
     <div class="modal-dialog">
@@ -55,11 +55,34 @@
                 </div>
             </div>
             <input type="text" class="form-control" id="answer" name="answer" placeholder="Answer" autocomplete="off"><br />
-            <input type="hidden" class="form-control" name="answer_url" placeholder="URL of a web page with answer">
+            <input type="text" class="form-control" name="answer_url" placeholder="URL of a web page containing the answer">
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           <button type="submit" name="save_answer" class="btn btn-primary">Save answer</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</form>
+
+<form method="POST" onsubmit="showAnswer()">
+  {% csrf_token %}
+  <div class="modal fade" id="skipModal" tabindex="-1" role="dialog" aria-labelledby="Skip" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Skip the Question</h4>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to skip this question (you won't be able to return to this question later)?<br /><br />
+          <strong>Note</strong>, that payments are made only if a player has found the answer or put sufficient amount of effort to searching the answer. It is ok to spent 5-10 minutes searching the answer. <br /><br />
+          The question in this game were designed difficult, but we guarantee that they can be answered with web search.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="submit" name="skip" class="btn btn-primary">Skip</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -74,5 +97,11 @@
 $(document).ready(function() {
   $('.searchiframe').css('height', $(window).height() - $('#navbar').height() - 10 + 'px');
 });
+
+function showAnswer() {
+{% if player_task.task.answer %}
+  alert("The correct answer is:\n" + "{{ player_task.task.answer|safe|escapejs }}");
+{% endif %}
+}
 </script>
 {% endblock %}

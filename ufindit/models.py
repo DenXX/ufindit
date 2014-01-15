@@ -16,6 +16,8 @@ class Player(models.Model):
 
 class Task(models.Model):
     text = models.CharField(max_length=1024, help_text=u"Text of a search task")
+    answer = models.CharField(max_length=1024, null=True, blank=True,
+        help_text=u'Answer to the question')
 
     def __unicode__(self):
         return self.text[0:min(50, len(self.text))]

@@ -232,7 +232,7 @@ MTURK_APPROVED_PERCENT_REQUIREMENT=90
 MTURK_MASTERS_REQUIREMENT=True
 MTURK_GAME_TITLE = 'uFindIt Web Search Game'
 MTURK_GAME_DESCRIPTION = 'The goal of the game is to use web search to find answers ' + \
-                         'to 3 difficult questions. Please read this if hit is not displayed ' + \
+                         'to 3 difficult questions. Please read this if HIT is not displayed ' + \
                          'http://mturkforum.com/showthread.php?10046-problem-with-hits'
 
 # EMU settings
