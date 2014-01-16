@@ -16,8 +16,10 @@ class Player(models.Model):
 
 class Task(models.Model):
     text = models.CharField(max_length=1024, help_text=u"Text of a search task")
-    answer = models.CharField(max_length=1024, null=True, blank=True,
+    answer = models.CharField(max_length=256, null=True, blank=True,
         help_text=u'Answer to the question')
+    long_answer = models.CharField(max_length=1024, null=True, blank=True,
+        help_text=u'More detailed explanation of the answer')
 
     def __unicode__(self):
         return self.text[0:min(50, len(self.text))]
@@ -94,6 +96,10 @@ class PlayerTask(models.Model):
         'of the task')
     finish = models.DateTimeField(blank=True, null=True, help_text=u'Finish '
         'time of the task')
+    incorrect_answers = models.TextField(blank=True, default='',
+        help_text=u'Answers user typed and which were judged incorrect')
+    incorrect_answers_urls = models.TextField(blank=True, default='',
+        help_text=u'Answers urls user typed and which were judged incorrect')
     answer = models.CharField(max_length=1024, blank=True, null=True, 
         help_text=u'User answer to the task')
     answer_url = models.URLField(blank=True, null=True, help_text=u'URL of '
