@@ -118,14 +118,14 @@ class GameView(View):
             player_game.save()
 
         if request.method == 'POST':
-            fields = ['like', 'again', 'easy']
+            fields = ['like', 'again', 'easy', 'exp']
             for field in fields:
                 if field not in request.POST:
                     return render(request, 'survey.html', {'errors': True})
 
             survey = GameSurvey(player_game=player_game, liked=request.POST['like'],
                 repeat=request.POST['again'], difficult=request.POST['easy'],
-                comments=request.POST['feedback'] if 'feedback' in request.POST else '')
+                comments=request.POST['feedback'], experience=request.POST['exp'], if 'feedback' in request.POST else '')
             survey.save()
             
             return HttpResponseRedirect(reverse('game_over',
