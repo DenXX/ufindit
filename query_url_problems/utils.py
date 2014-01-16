@@ -1,29 +1,26 @@
 
-general_hint = "You can rephrase the query, try adding terms that are likely to appear on the webpage containing the answer"
+general_hint = """You can press Ctrl+F (or Cmd+F or MacOS) to search for text on a webpage"""
 
-missing_hint = """Search results might've missed some search terms you provided. You can try:
+missing_hint = """If search results missed some query terms, try to:
                <ul>
-                <li style="padding-bottom:5px">Remove terms that are not required to be in a document containing the answer</li>
-                <li style="padding-bottom:5px">Add other terms related to the topic of interest (add terms are likely to appear in a page containing the answer)</li>
-                <li style="padding-bottom:5px">Extend query with synonyms for missing terms, e.g. you can use OR query operator 
-                (e.g. query <em>Hubble achievements OR accomplishments</em> will search for documents that contain term achievements or accomplishments or both)</li>
+                <li style="padding-bottom:5px">remove unnecessary terms from the query, leave only keywords about the main topic of the query</li>
+                <li style="padding-bottom:5px">add related terms (likely to appear on the answer page)</li>
+                <li style="padding-bottom:5px">extend query with synonyms for missing terms, e.g. you can use OR query operator to separate synonyms</li>
                </ul>"""
 
-misinterpreted_hint = """Search results might've misinterpreted some search terms you provided. You can try:
+misinterpreted_hint = """If search results misinterpreted some query terms, try to:
                 <ul>
-                    <li style="padding-bottom:5px">Add other terms related to the topic of interest (think which terms are likely to appear in a page containing the answer)</li>
-                    <li style="padding-bottom:5px">Remove documents containing irrelevant terms by adding - before the term (e.g. query <em>Hubble -telescope</em> will search
-                    for documents that contain the term Hubble but doesn't contain term telescope)</li>
-                    <li style="padding-bottom:5px">Extend query with synonyms for missing terms, e.g. you can use OR query operator 
-                    (e.g. query <em>Hubble achievements OR accomplishments</em> will search for documents that contain term achievements or accomplishments or both)</li>
+                    <li style="padding-bottom:5px">add related terms and synonyms (e.g. using OR operator to separate synonyms)</li>
+                    <li style="padding-bottom:5px">filter documents containing irrelevant terms by a term you don't want to see in the results with minus operator (e.g. query <em>Hubble -telescope</em>)</li>
                 </ul>
                 """
 
-missing_relations_hint = """Search results might've missed relations between some search terms you provided. You can try:
+missing_relations_hint = """If search results missed relations between query terms, try to:
                         <ul>
-                            <li style="padding-bottom:5px">search for documents containing exact phrase using &quot; operator (e.g. query <em>"Hubble telescope"</em> will search
+                            <li style="padding-bottom:5px">remove unnecessary terms from the query, leave only keywords about the main topic of the query</li>
+                            <li style="padding-bottom:5px">search for documents containing exact phrase using &quot; operator (e.g. <em>"Hubble telescope"</em> will search
                                 for documents containing the phrase Hubble telescope)</li>
-                            <li style="padding-bottom:5px">search for documents containing some terms near each other using near: operator (e.g. query <em>Hubble near:5 telescope</em> will rank
+                            <li style="padding-bottom:5px">search for documents containing some terms near each other using <em>near:</em> operator (e.g. query <em>Hubble near:5 telescope</em> will rank
                                 documents containing the terms Hubble and telescope within 5 words of each other higher)</li>
                         </ul>
                       """
