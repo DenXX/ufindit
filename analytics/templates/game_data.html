@@ -11,6 +11,7 @@
                 <div class="panel-heading">{{ task.task.text }}<a data-toggle="collapse" href="#collapse{{ forloop.counter }}" class="glyphicon glyphicon-chevron-down pull-right"></a></div>
                 <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse in">
                     <div class="panel-body">
+                        Answers: {{ task.incorrect_answers }}<br />
                         Answer: {{ task.answer }}<br />
                         Answer url: {{ task.answer_url }}<br />
                         Start: {{ task.start }}<br />

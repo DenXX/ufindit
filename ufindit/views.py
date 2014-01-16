@@ -204,12 +204,18 @@ class GameView(View):
     def post(self, request, player_game, current_task):
         if request.POST.has_key('save_answer'):
             current_task.answer = request.POST['answer']
+            current_task.incorrect_answers = request.POST['incorrect_answers']
+            current_task.incorrect_answers_urls = request.POST['incorrect_answers_urls']
             current_task.answer_url = request.POST['answer_url']
             # Increment user score
             player_game.score += 1
             player_game.save()
-        elif not request.POST.has_key('skip'):
+        elif request.POST.has_key('skip'):
+            current_task.incorrect_answers = request.POST['skip_incorrect_answers']
+            current_task.incorrect_answers_urls = request.POST['skip_incorrect_answers_urls']
+        else:
             raise Http404
+
         # Save the current task
         player_game.current_task_index += 1
         player_game.save()
@@ -221,6 +227,8 @@ class GameView(View):
 
     def get(self, request, game, current_task):
         context = { 'game' : game, 'player_task': current_task}
+        if current_task.task.answer:
+            context['answer_to_check'] = filter(unicode.isalnum, current_task.task.answer.lower())
         return render(request, 'game.html', context)
 
 

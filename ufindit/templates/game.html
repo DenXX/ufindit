@@ -38,8 +38,10 @@
 {% endblock %}
 
 {% block content %}
-<form method="POST" onsubmit="showAnswer()">
+<form method="POST" id="answerForm">
   {% csrf_token %}
+  <input type="hidden" id="incorrect_answers" name="incorrect_answers" value="" />
+  <input type="hidden" id="incorrect_answers_urls" name="incorrect_answers_urls" value="" />
   <div class="modal fade" id="answerModal" tabindex="-1" role="dialog" aria-labelledby="Answer" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -55,7 +57,7 @@
                 </div>
             </div>
             <input type="text" class="form-control" id="answer" name="answer" placeholder="Answer" autocomplete="off"><br />
-            <input type="text" class="form-control" name="answer_url" placeholder="URL of a web page containing the answer">
+            <input type="text" class="form-control" id="answer_url" name="answer_url" autocomplete="off" placeholder="URL of a web page containing the answer">
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -68,6 +70,8 @@
 
 <form method="POST" onsubmit="showAnswer()">
   {% csrf_token %}
+  <input type="hidden" id="skip_incorrect_answers" name="skip_incorrect_answers" value="" />
+  <input type="hidden" id="skip_incorrect_answers_urls" name="skip_incorrect_answers_urls" value="" />
   <div class="modal fade" id="skipModal" tabindex="-1" role="dialog" aria-labelledby="Skip" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -99,9 +103,27 @@ $(document).ready(function() {
 });
 
 function showAnswer() {
-{% if player_task.task.answer %}
+{% if player_task.task.long_answer %}
+  alert("The correct answer is:\n" + "{{ player_task.task.long_answer|safe|escapejs }}");
+{% elif player_task.task.answer %}
   alert("The correct answer is:\n" + "{{ player_task.task.answer|safe|escapejs }}");
 {% endif %}
 }
+
+$('#answerForm').submit(function (e) {
+  {% if answer_to_check %}
+    if ($('#answer').val().replace(/\W/g, '').toLowerCase().indexOf("{{ answer_to_check|safe|escapejs }}") == -1) {
+      $('#incorrect_answers').val($('#incorrect_answers').val() + '\n' + $('#answer').val());
+      $('#incorrect_answers_urls').val($('#incorrect_answers_urls').val() + '\n' + $('#answer_url').val());
+      $('#skip_incorrect_answers').val($('#skip_incorrect_answers').val() + '\n' + $('#answer').val());
+      $('#skip_incorrect_answers_urls').val($('#skip_incorrect_answers_urls').val() + '\n' + $('#answer_url').val());
+      alert("The answer is incorrect!\nPlease make sure you are entering the type of answer specified in the question.\n\nYou can skip the question if you cannot find the answer or if you are sure that your answer is correct, we will review answers later.");
+      e.preventDefault();
+    }
+    else {
+      alert("Congratulations! Your answer is correct!");
+    }
+  {% endif %}
+});
 </script>
 {% endblock %}
