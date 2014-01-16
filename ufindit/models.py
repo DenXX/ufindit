@@ -208,6 +208,8 @@ class GameSurvey(models.Model):
         'they useful', null=True)
     comments = models.TextField(blank=True, null=True, help_text=u'User '
         'comments on the game')
+    experience = models.TextField(blank=True, null=True, help_text=u'User '
+        'experience with web search')
 
 
     def __unicode__(self):
