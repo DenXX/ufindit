@@ -89,7 +89,7 @@ def search(request, task_id, template='serp.html'):
 
         if player_task.player_game.extra_flags and player_task.player_game.extra_flags != "0":
             from query_url_problems.utils import get_search_hints
-            context['search_hints'] = get_search_hints(serp, player_task.player_game.extra_flags == "2")
+            context['search_hints'] = get_search_hints(serp, player_task.player_game.extra_flags == "1")
 
     context['enable_emu'] = settings.ENABLE_EMU_LOGGING
     return render(request, template, context)
