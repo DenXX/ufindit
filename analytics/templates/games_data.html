@@ -5,7 +5,9 @@
     <h2>Games <small><a href="{% url 'analytics:games' finish='f' %}">finished</a>, <a href="{% url 'analytics:games' finish='a' %}">all</a></small></h2>
     <ol>
     {% for game in games %}
-        <li><a href="{% url 'analytics:game' game_id=game.id %}">{{ game.player.user.username }} - {{ game.game.name }} [{{ game.start }} - {{ game.finish }}]</a></li>
+        <li><a href="{% url 'analytics:game' game_id=game.id %}">{{ game.player.user.username }} - {{ game.game.name }} [{{ game.start }} - {{ game.finish }}]</a>
+        <span class="badge">{{ game.extra_flags }}</span>
+        </li>
     {% endfor %}
     </ol>
 </div>

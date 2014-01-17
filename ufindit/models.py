@@ -206,11 +206,10 @@ class GameSurvey(models.Model):
         '(from -2..2)')
     hints_useful = models.IntegerField(help_text=u'If we showed search hints were '
         'they useful', null=True)
+    experience = models.IntegerField(default=0, help_text=u'User '
+        'experience with web search')
     comments = models.TextField(blank=True, null=True, help_text=u'User '
         'comments on the game')
-    experience = models.TextField(blank=True, null=True, help_text=u'User '
-        'experience with web search')
-
 
     def __unicode__(self):
         return u'Survey: ' + unicode(self.player_game)

@@ -251,7 +251,7 @@ class RulesView(View):
         player_game, created = PlayerGame.objects.get_or_create(player=player,
             game=game)
 
-        player_game.extra_flags= str(len(game.playergame_set.all()) % 3)
+        player_game.extra_flags= str(len(game.playergame_set.all()) % 2)
         player_game.save()
 
         if player_game.rules_accepted:
