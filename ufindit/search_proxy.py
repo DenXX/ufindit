@@ -235,6 +235,8 @@ class FilterSearchProvider(SearchProvider):
         if settings.FILTER_URLS_IF_CONTAIN_QUESTION:
             question_tokens = get_tokens(question)
             result_tokens = set(get_tokens(result.raw_title) + get_tokens(result.raw_snippet))
+            if 'google' in result_tokens:
+                return True
             count = 0
             for qtoken in question_tokens:
                 if qtoken in result_tokens:
