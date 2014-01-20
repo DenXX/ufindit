@@ -125,7 +125,7 @@ class GameView(View):
 
             survey = GameSurvey(player_game=player_game, liked=request.POST['like'],
                 repeat=request.POST['again'], difficult=request.POST['easy'],
-                comments=request.POST['feedback'], experience=request.POST['exp'], if 'feedback' in request.POST else '')
+                experience=request.POST['exp'], comments=request.POST['feedback'] if 'feedback' in request.POST else '')
             survey.save()
             
             return HttpResponseRedirect(reverse('game_over',
