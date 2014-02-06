@@ -6,11 +6,14 @@
             <div class="panel-heading">Cannot find the answer?</div>
             <div class="panel-body">
                 <small>
-                <ul style="padding: 5px">
-                {% for hint in search_hints %}
-                <li style="padding-bottom: 5px">{{ hint|safe }}</li>
-                {% endfor %}
-                </ul>
+                {{ search_hints|safe }}
+                {% comment %}
+                    <ul style="padding: 5px">
+                    {% for hint in search_hints %}
+                    <li style="padding-bottom: 5px">{{ hint|safe }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endcomment %}
                 </small>
             </div>
         </div>

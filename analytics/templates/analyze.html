@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    Total no hint: {{ nohint_total_count }}<br />
+    Total hint: {{ hint_total_count }}<br />
+    Finished no hint: {{ nohint_count }}<br />
+    Finished hint: {{ hint_count }}<br />
+    <br />
+    Hint times: {{ hint_times }}<br />
+    Hint ave time: {{ hint_time }}<br />
+    No hint times: {{ nohint_times }}<br />
+    No hint ave time: {{ nohint_time }}<br />
+    <br />
+    Hint score: {{ hint_score }}<br />
+    No hint score: {{ nohint_score }}
+    <br />
+    Hint survey: {{ hint_survey }}<br />
+    No hint survey: {{ nohint_survey }}<br />
+</div>
+{% endblock %}

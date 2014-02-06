@@ -87,9 +87,10 @@ def search(request, task_id, template='serp.html'):
         # Log query event
         EventLogger.query(player_task, query, serp, context['results'].number)
 
-        if player_task.player_game.extra_flags and player_task.player_game.extra_flags != "0":
-            from query_url_problems.utils import get_search_hints
-            context['search_hints'] = get_search_hints(serp, player_task.player_game.extra_flags == "1")
+    # Show hints even fi no query was submitted
+    if player_task.player_game.extra_flags and player_task.player_game.extra_flags != "0":
+        from query_url_problems.utils import get_search_hints
+        context['search_hints'] = get_search_hints(player_task.task, None, player_task.player_game.extra_flags == "1")
 
     context['enable_emu'] = settings.ENABLE_EMU_LOGGING
     return render(request, template, context)

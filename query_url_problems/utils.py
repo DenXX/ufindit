@@ -25,7 +25,7 @@ missing_relations_hint = """If search results missed relations between query ter
                         </ul>
                       """
 
-def get_search_hints(serp, all = False):
+def get_search_hints_old(serp, all = False):
     qu_judgements = serp.queryurljudgement_set.all()
     if len(qu_judgements) == 0 and not all:
         return None
@@ -62,3 +62,38 @@ def get_search_hints(serp, all = False):
         hints.append(missing_relations_hint)
 
     return hints
+
+task_hints = {
+    16: """
+            <ol>
+                <li style="padding-bottom:5px">Find what is senescence</li>
+                <li style="padding-bottom:5px">Find who do not undergo senescence</li>
+                <li style="padding-bottom:5px">Find animals who can regenerate body and choose the one that satisfy both conditions</li>
+            </ol>
+            BTW, you can press Ctrl+F (or Cmd+F or MacOS) to search for text on a webpage
+          """,
+    24: """
+            <ol>
+                <li style="padding-bottom:5px">Find what is the "waterless place"?</li>
+                <li style="padding-bottom:5px">Search for important eggs discovery in this "waterless place"</li>
+            </ol>
+            BTW, you can press Ctrl+F (or Cmd+F or MacOS) to search for text on a webpage
+          """,
+    20: """
+            <ol>
+                <li style="padding-bottom:5px">Find what is Georges Lemaitre theory</li>
+                <li style="padding-bottom:5px">Search for radiation that is an evidence of this theory</li>
+            </ol>
+            BTW, you can press Ctrl+F (or Cmd+F or MacOS) to search for text on a webpage
+          """,
+    25: """
+            <ol>
+                <li style="padding-bottom:5px">Find who was the second wife of King Henry VIII</li>
+                <li style="padding-bottom:5px">Find ghost stories about this person</li>
+            </ol>
+            BTW, you can press Ctrl+F (or Cmd+F or MacOS) to search for text on a webpage
+          """
+}
+
+def get_search_hints(task, serp, all = False):
+    return task_hints[task.id]

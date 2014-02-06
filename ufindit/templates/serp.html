@@ -19,8 +19,8 @@ uFindIt
 
 <div class="container">
     <div class="row">
-        {% if query %}
         <div class="col-md-8 panel panel-default panel-body">
+            {% if query %}
             {% if not results %}
                 No results found for <strong>{{ query }}</strong>.
             {% else %}
@@ -62,14 +62,13 @@ uFindIt
                 </ul>
                 {% endblock %}
                 {# Pagination : END #}
-
+            {% endif %}
             {% endif %}
         </div>
         <div class="col-md-4">
             {% block serp_right_panel %}
             {% endblock %}
         </div>
-        {% endif %}
     </div>
 </div>
 {% endblock %}
