@@ -1,6 +1,8 @@
 
 from datetime import datetime
 
+from django.http import HttpResponse
+from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, get_object_or_404
 from django.views.generic.base import View
 from django.views.generic import ListView
@@ -27,68 +29,58 @@ class GameView(View):
         game = get_object_or_404(PlayerGame, id=game_id)
         return render(request, self.template_name, {'game': game})
 
-class AnalyzeView(View):
-    template_name = 'analyze.html'
+class DataView(View):
+    template_name = 'data.csv'
 
-    def get(self, request):
+    def get(self, request, game_id):
         context = {}
-        allgames = PlayerGame.objects.filter(game__id=13, start__gte=datetime(year=2014, month=2, day=1))
-        all_hint_games = allgames.filter(extra_flags=1)
-        all_nohint_games = allgames.filter(extra_flags=0)
-        context['hint_total_count'] = all_hint_games.count()
-        context['nohint_total_count'] = all_nohint_games.count()
+        games = PlayerGame.objects.filter(game__id=game_id)
+        header = ['id', 'start', 'finish', 'time_sec', 'score', 'extra_flags', 'liked', 'repeat', 'difficult', 'hints_useful', 'experience', 'comments']
+        for i in xrange(games[0].game.tasks.count()):
+            header.append('task' + str(i) + '_start')
+            header.append('task' + str(i) + '_finish')
+            header.append('task' + str(i) + '_time')
+            header.append('task' + str(i) + '_answer')
+            header.append('task' + str(i) + '_incorrect')
+        data = [header, ]
+        for game in games:
+            survey = GameSurvey.objects.filter(player_game=game)[0] if GameSurvey.objects.filter(player_game=game).count() == 1 else None
+            game_data = [game.id, game.start, game.finish, (game.finish - game.start).seconds if game.finish else None, game.score, game.extra_flags, survey.liked if survey else None, 
+                survey.repeat if survey else None, survey.difficult if survey else None, survey.hints_useful if survey else None,
+                survey.experience if survey else None, survey.comments if survey else None,
+            ]
+            for task in PlayerTask.objects.filter(player_game=game).extra(order_by=['order',]):
+                game_data.append(task.start)
+                game_data.append(task.finish)
+                game_data.append((task.start - task.finish).seconds if task.start and task.finish else None)
+                game_data.append(task.answer)
+                game_data.append(task.incorrect_answers)
+            data.append(map(str, game_data))
+        import csv
+        import StringIO
+        output = StringIO.StringIO()
+        csv_writer = csv.writer(output)
+        csv_writer.writerows(data)
+        context['data'] = output.getvalue()
+        return render(request, self.template_name, context, content_type='text/csv')
 
-        games = PlayerGame.objects.filter(game__id=13, start__gte=datetime(year=2014, month=2, day=1), finish__isnull=False)
-        context['games'] = games
-        hint_games = games.filter(extra_flags=1)
-        nohint_games = games.filter(extra_flags=0)
-        context['hint_count'] = hint_games.count()
-        context['nohint_count'] = nohint_games.count()
+@staff_member_required
+def grant_bonus_view(request, game_id):
+    from ufindit.mturk import MTurkProxy
+    mturk = MTurkProxy('0')
+    mturk.grant_bonus(Game.objects.get(id=int(game_id)))
+    return HttpResponse("OK")
 
-        time = 0
-        count = 0
-        times = []
-        for g in hint_games:
-            time += (g.finish - g.start).seconds
-            times.append((g.finish - g.start).seconds)
-            count += 1
-        context['hint_time'] = 1.0 * time / count
-        context['hint_times'] = times
+@staff_member_required
+def approve_view(request, game_id):
+    from ufindit.mturk import MTurkProxy
+    mturk = MTurkProxy('0')
+    mturk.approve_assignments(Game.objects.get(id=int(game_id)))
+    return HttpResponse("OK")
 
-        time = 0
-        count = 0
-        times = []
-        for g in nohint_games:
-            time += (g.finish - g.start).seconds
-            times.append((g.finish - g.start).seconds)
-            count += 1
-        context['nohint_time'] = 1.0 * time / count
-        context['nohint_times'] = times
-
-        score = 0
-        count = 0
-        for g in hint_games:
-            score += g.score
-            count += 1
-        context['hint_score'] = 1.0 * score / count
-
-        score = 0
-        count = 0
-        for g in nohint_games:
-            score += g.score
-            count += 1
-        context['nohint_score'] = 1.0 * score / count
-
-        survey = []
-        for g in hint_games:
-            s = GameSurvey.objects.filter(player_game = g)
-            survey.append(s[0].hints_useful)
-        context['hint_survey'] = survey
-
-        survey = []
-        for g in nohint_games:
-            s = GameSurvey.objects.filter(player_game = g)
-            survey.append(s[0].hints_useful)
-        context['nohint_survey'] = survey
-
-        return render(request, self.template_name, context)
+@staff_member_required
+def block_rejected_view(request, game_id):
+    from ufindit.mturk import MTurkProxy
+    mturk = MTurkProxy('0')
+    mturk.block_rejected_users(Game.objects.get(id=int(game_id)))
+    return HttpResponse("OK")

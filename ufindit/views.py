@@ -90,7 +90,7 @@ def search(request, task_id, template='serp.html'):
     # Show hints even fi no query was submitted
     if player_task.player_game.extra_flags and player_task.player_game.extra_flags != "0":
         from query_url_problems.utils import get_search_hints
-        context['search_hints'] = get_search_hints(player_task.task, None, player_task.player_game.extra_flags == "1")
+        context['search_hints'] = get_search_hints(player_task.task, None, player_task.player_game.extra_flags == "2")
 
     context['enable_emu'] = settings.ENABLE_EMU_LOGGING
     return render(request, template, context)
@@ -252,7 +252,7 @@ class RulesView(View):
         player_game, created = PlayerGame.objects.get_or_create(player=player,
             game=game)
 
-        player_game.extra_flags= str(len(game.playergame_set.all()) % 2)
+        player_game.extra_flags= str(len(game.playergame_set.all()) % 3)
         player_game.save()
 
         if player_game.rules_accepted:

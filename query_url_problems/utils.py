@@ -12,7 +12,7 @@ misinterpreted_hint = """If search results misinterpreted some query terms, try 
                 <ul>
                     <li style="padding-bottom:5px">add related terms and synonyms (e.g. using OR operator to separate synonyms)</li>
                     <li style="padding-bottom:5px">filter documents containing irrelevant terms by a term you don't want to see in the results with minus operator (e.g. query <em>Hubble -telescope</em>)</li>
-                </ul>
+                    </ul>
                 """
 
 missing_relations_hint = """If search results missed relations between query terms, try to:
@@ -64,36 +64,64 @@ def get_search_hints_old(serp, all = False):
     return hints
 
 task_hints = {
+    2: """
+            <ol>
+                <li style="padding-bottom:5px">Find the names of the gods from the Archaic triad</li>
+                <li style="padding-bottom:5px">For each of the gods find a Greek counterpart</li>
+            </ol>
+       """,
     16: """
             <ol>
                 <li style="padding-bottom:5px">Find what is senescence</li>
                 <li style="padding-bottom:5px">Find who do not undergo senescence</li>
                 <li style="padding-bottom:5px">Find animals who can regenerate body and choose the one that satisfy both conditions</li>
             </ol>
-            BTW, you can press Ctrl+F (or Cmd+F or MacOS) to search for text on a webpage
+          """,
+    17: """
+            <ol>
+                <li style="padding-bottom:5px">Find the name of the battle mentioned in the questions</li>
+                <li style="padding-bottom:5px">Search for coded communications language used in this battle</li>
+            </ol>
           """,
     24: """
             <ol>
-                <li style="padding-bottom:5px">Find what is the "waterless place"?</li>
+                <li style="padding-bottom:5px">Find what is the "waterless place" mentioned in the question?</li>
                 <li style="padding-bottom:5px">Search for important eggs discovery in this "waterless place"</li>
             </ol>
-            BTW, you can press Ctrl+F (or Cmd+F or MacOS) to search for text on a webpage
           """,
     20: """
             <ol>
                 <li style="padding-bottom:5px">Find what is Georges Lemaitre theory</li>
                 <li style="padding-bottom:5px">Search for radiation that is an evidence of this theory</li>
             </ol>
-            BTW, you can press Ctrl+F (or Cmd+F or MacOS) to search for text on a webpage
           """,
     25: """
             <ol>
                 <li style="padding-bottom:5px">Find who was the second wife of King Henry VIII</li>
                 <li style="padding-bottom:5px">Find ghost stories about this person</li>
             </ol>
-            BTW, you can press Ctrl+F (or Cmd+F or MacOS) to search for text on a webpage
           """
 }
 
+general_hint = """
+<ol>
+    <li style="padding-bottom:5px">Split question into 2 or more logical parts</li>
+    <li style="padding-bottom:5px">Find answers to the parts of the question</li>  
+    <li style="padding-bottom:5px">Use answers to the parts of the question to find answer to the full question</li>
+</ol>
+For example:
+<div class="well">
+Question: The second wife of King Henry VIII is said to haunt the grounds where she was executed. What does she supposedly have tucked under her arm?
+<br /><br />
+<ul>
+    <li>Search [second wife King Henry VIII] to find Anne Boleyn.</li>
+    <li>Search [Anne Boleyn under arm] to find that her ghost is in the London Tower where she is said to carry her head tucked underneath her arm.</li>
+</ul>
+</div>
+"""
+
 def get_search_hints(task, serp, all = False):
-    return task_hints[task.id]
+    if not all:
+        return task_hints[task.id] if task.id in task_hints else ''
+    else:
+        return general_hint

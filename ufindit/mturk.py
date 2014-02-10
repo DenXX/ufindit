@@ -1,6 +1,7 @@
 from boto.mturk.connection import *
 from boto.mturk.question import ExternalQuestion
 from boto.mturk.qualification import Requirement, LocaleRequirement, PercentAssignmentsApprovedRequirement, Qualifications
+from boto.mturk.price import Price
 
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
@@ -11,7 +12,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 
 
-from ufindit.models import Game, Player
+from ufindit.models import *
 
 import settings
 
@@ -72,6 +73,38 @@ class MTurkProxy:
         hit = self.mturk_connection.create_hit( **self.paramdict )[0]
         game.hitId = hit.HITId
         game.save()
+
+    def grant_bonus(self, game):
+        """ Grants bonus to all players who answered questions correctly """
+        player_games = PlayerGame.objects.filter(game=game, score=game.tasks.count())
+        bonus = Price(0.5)
+        for player_game in player_games:
+            assignment = self.mturk_connection.get_assignment(player_game.assignmentId)[0]
+            if assignment.AssignmentStatus == 'Approved':
+                self.mturk_connection.grant_bonus(str(player_game.player.mturk_worker_id),
+                    str(player_game.assignmentId), bonus, 'Correct answers to all questions.')
+
+    def approve_assignments(self, game):
+        player_games = PlayerGame.objects.filter(game=game, finish__isnull=False)
+        for player_game in player_games:
+            assignment = self.mturk_connection.get_assignment(player_game.assignmentId)[0]
+            if assignment.AssignmentStatus == 'Submitted':
+                fail = False
+                for player_task in player_game.playertask_set.all():
+                    if Event.objects.filter(player_task=player_task, event='C').count() == 0:
+                        fail = True
+                    if (player_task.finish - player_task.start).seconds < 120:
+                        fail = True
+                if not fail:
+                    self.mturk_connection.approve_assignment(player_game.assignmentId)
+
+    def block_rejected_users(self, game):
+        player_games = PlayerGame.objects.filter(game=game, finish__isnull=False)
+        for player_game in player_games:
+            assignment = self.mturk_connection.get_assignment(player_game.assignmentId)[0]
+            if assignment.AssignmentStatus == 'Rejected':
+                self.mturk_connection.block_worker(player_game.player.mturk_worker_id,
+                    reason='Violation of the rules of the game')
 
 
 class MTurkUser:

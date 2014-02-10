@@ -6,7 +6,7 @@
     <ol>
     {% for game in games %}
         <li><a href="{% url 'analytics:game' game_id=game.id %}">{{ game.player.user.username }} - {{ game.game.name }} [{{ game.start }} - {{ game.finish }}]</a>
-        <span class="badge">{{ game.extra_flags }}</span>
+        <span class="badge">{{ game.extra_flags }}</span>&nbsp;<a href="{% url 'analytics:data' game_id=game.game.id %}">game data [csv]</a>
         </li>
     {% endfor %}
     </ol>
