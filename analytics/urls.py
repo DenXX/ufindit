@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.contrib.auth.decorators import user_passes_test
 from django.views.generic import TemplateView
 
-from analytics.views import *
+from analytics.views import * 
 
 urlpatterns = patterns('',
     url(r'^games/(?P<finish>[fa])/$', user_passes_test(lambda u: u.is_staff)(GamesView.as_view()),
@@ -17,4 +17,5 @@ urlpatterns = patterns('',
     url(r'^games/(?P<game_id>[0-9]*)/bonus/$', grant_bonus_view, name='grant_bonus'),
     url(r'^games/(?P<game_id>[0-9]*)/approve/$', approve_view, name='approve'),
     url(r'^games/(?P<game_id>[0-9]*)/block/$', block_rejected_view, name='block'),
+    url(r'^games/(?P<game_id>[0-9]*)/assign_status/$', populate_amazon_status_view, name='status'),
 )

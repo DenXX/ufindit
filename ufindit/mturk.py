@@ -106,6 +106,9 @@ class MTurkProxy:
                 self.mturk_connection.block_worker(player_game.player.mturk_worker_id,
                     reason='Violation of the rules of the game')
 
+    def get_assignment_status(self, player_game):
+        return self.mturk_connection.get_assignment(player_game.assignmentId)[0].AssignmentStatus
+
 
 class MTurkUser:
     """ Manages users that came to the game from MTurk """
